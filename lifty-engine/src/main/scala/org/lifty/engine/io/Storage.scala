@@ -64,9 +64,8 @@ trait Storage {
   // Returns a list with all of the recipes currently in the storage. 
   def allRecipes: IO[List[Recipe]] = io {
     storage.listFiles
-           .filter( _.isDirectory)          
-           .map( _.getName)
-           .map( recipe(_).unsafePerformIO )
+           .filter( _.isDirectory)
+           .map( f => recipe(f.getName).unsafePerformIO )
            .filter( _.isSuccess )
            .map( _.toOption.get )
            .toList
