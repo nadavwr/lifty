@@ -39,8 +39,15 @@ trait Lifty extends InputParser {
         storageComponent.allRecipes.unsafePerformIO.map(_.toString).mkString("\n").success
       }
 
-      case LearnCommand => {
-        "Not yet supported".success
+      case LearnCommand => {        
+        (for {
+          name   <- args.headOption
+          urlStr <- args.tail.headOption
+        } yield {
+          storageComponent.storeRecipe(name, new URL(urlStr)).unsafePerformIO.fold(
+            error => error.fail,
+            recipe => recipe.toString.success)
+        }) getOrElse(Error("You have to supply a name and url for the recipe").fail)
       }
       
       case TemplatesCommand => {

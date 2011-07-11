@@ -38,7 +38,8 @@ object Downloader {
       writer.close()
       to.success
     } catch {
-      case e: Exception => Error("Failure in Downloader.download").fail
+      case e: Exception => 
+        Error("Lifty was unable to download the recipe (%s)".format(e.toString)).fail
     }
   }
   
