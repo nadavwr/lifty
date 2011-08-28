@@ -10,7 +10,7 @@ trait Lifty extends InputParser {
 
   // A type that covers instance that can request input from the user
   type InputComponent = {
-    def requestInput(msg: String): IO[String]
+    def requestInput(msg: String, default: String): IO[String]
   }
 
   // The component to use when requesting input from the user
@@ -67,7 +67,7 @@ trait Lifty extends InputParser {
       case CreateCommand => {
         args.headOption.map { name => 
           descriptionOfRecipe(name).flatMap { description => 
-            parseTemplate(description, args).flatMap { tuple => 
+            parseTemplate(description, args.tail).flatMap { tuple => 
               val (template,rest) = tuple
               parseArguments(template, rest).flatMap { env => 
                 env.toString.success

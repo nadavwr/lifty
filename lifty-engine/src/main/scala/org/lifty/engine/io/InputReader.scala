@@ -16,14 +16,18 @@ import jline.ConsoleReader
 
 // requests input from the user using jline 
 object InputReaderComponent {
-  def requestInput(msg: String): IO[String] = io {
-    InputReader.readLine(msg).getOrElse("")
+  def requestInput(msg: String, default: String = ""): IO[String] = io {
+    InputReader.readLine(msg).getOrElse("") match {
+      case "" if default != "" => default
+      case "" => requestInput(msg,default).unsafePerformIO // write that the user needs to supply input
+      case other => other 
+    }
   } 
 }
 
 // always returns IO["emulatedInput"]
 object EmulatedInputReaderComponent {
-  def requestInput(msg: String): IO[String] = io {
+  def requestInput(msg: String, default: String = ""): IO[String] = io {
     "emulatedInput"
   }
 }
