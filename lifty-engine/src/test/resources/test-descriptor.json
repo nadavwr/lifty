@@ -1,6 +1,6 @@
 {
     "sources" : [
-      { "name" : "snippet",
+      { "name" : "snippet.ssp",
         "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-engine/src/test/resources/snippet.ssp"
       }
     ],
