@@ -23,7 +23,7 @@ object DescriptionLoader {
       inputStream => (for {
         jvalue      <- JsonParser.parseOpt(inputStream)
         description <- jvalue.extractOpt[Description]
-      } yield description.success).getOrElse(Error("Wasn't able to parse ").fail)
+      } yield description.success).getOrElse(Error("Wasn't able to parse json file: " + description).fail)
     )
   }
 

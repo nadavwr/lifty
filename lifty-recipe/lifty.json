@@ -1,6 +1,5 @@
 {
     "sources": [
-        // general templates 
         {   "name" : "snippet.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/snippet.ssp"
         },
@@ -16,7 +15,6 @@
         {   "name" : "comet.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/comet.ssp"
         },
-        // user templates 
         {   "name" : "ProjectDefinition_dependencies_injections_user.txt",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/user/ProjectDefinition_dependencies_injections_user.txt"
         },
@@ -35,7 +33,6 @@
         {   "name" : "user.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/user/user.ssp"
         },
-        // blank-lift-project 
         {   "name" : "404.html",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/404.html"
         },
@@ -72,7 +69,6 @@
         {   "name" : "wizard-all.html",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/wizard-all.html"
         },
-        // basic-lift-project 
         {   "name" : "HelloWorldTest.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/HelloWorldTest.ssp"
         },

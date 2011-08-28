@@ -30,7 +30,7 @@ case class Template(
   arguments:      List[Argument],
   files:          List[TemplateFile],
   injections:     List[TemplateInjection],
-  dependencies:   List[TemplateReference])
+  dependencies:   List[String])
 
 case class Source(
   name:           String, 
@@ -52,8 +52,4 @@ case class TemplateInjection(
   file:         String,
   into:         String,
   point:        String
-)
-
-case class TemplateReference(
-  name:         String
 )
