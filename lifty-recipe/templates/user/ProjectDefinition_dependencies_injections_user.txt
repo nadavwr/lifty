@@ -1,0 +1,2 @@
+  val mapper = "net.liftweb" %% "lift-mapper" % liftVersion % "compile->default"
+  val h2 = "com.h2database" % "h2" % "1.2.138"

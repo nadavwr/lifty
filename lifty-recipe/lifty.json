@@ -1,0 +1,183 @@
+{
+    "repository" : "http://lifty.github.com/Lifty/templates",
+    "templates" : [
+        {   "name"          : "snippet",
+            "description"   : "creates a snippet",
+            "arguments"     : [
+                {   "name"          :   "snippetName" },
+                {   "name"          :   "snippetpack",
+                    "default"       :   "{package}"}
+            ],
+            "files"         : [
+                {   "file"          : "snippet.ssp",
+                    "destination"   : "src/main/scala/${snippetpack}/${snippetName}.scala"
+                }
+            ]
+        },
+        {   "name"          : "mapper",
+            "description"   : "Creates a model class using Mapper",
+            "notice"        : "Remember to add ${modelName} to the Schemifier in your boot.scala file",
+            "arguments"     : [
+                {   "name"          :   "modelName" },
+                {   "name"          :   "modelpack",
+                    "default"       :   "{modelPackage}"    
+                },
+                {   "name"          :   "fields",
+                    "optional"      :   true,
+                    "repeatable"    :   true}
+            ],
+            "files"         : [
+                {   "file"          : "mapper.ssp",
+                    "destination"   : "src/main/scala/${modelpack}/${modelName}.scala"
+                }
+            ]
+        },
+        {   "name"          : "comet",
+            "description"   : "Creates a comet component",
+            "notice"        : "Add <lift:comet type='${cometName}' /> in a template file to use the comet component",
+            "arguments"     : [
+                {   "name"          :   "cometName" },
+                {   "name"          :   "cometpack",
+                    "default"       :   "{cometPackage}"
+                    
+                }
+            ],
+            "files"         : [
+                {   "file"          : "comet.ssp",
+                    "destination"   : "src/main/scala/${cometpack}/${cometName}.scala"
+                }
+            ]
+        },
+        
+        
+        {   "name"          : "layout",
+            "description"   : "Creates an empty layout with a surround tag",
+            "arguments"     : [
+                {   "name"          :   "layoutName" }
+            ],
+            "files"         : [
+                {   "file"          : "layout.ssp",
+                    "destination"   : "src/main/webapp/${layoutName}.html"
+                }
+            ]
+        },
+        {   "name"          : "user",
+            "description"   : "Template for a model class implemented using Mapper. It provides basic functionality that would expect from a User",
+            "arguments"     : [
+                {   "name"          :   "modelpack",
+                    "default"       :   "{modelPackage}"    
+                }
+            ],
+            "files"         : [
+                {   "file"          : "user.ssp",
+                    "destination"   : "src/main/scala/${modelpack}/User.scala"
+                }
+            ],
+            "injections"    : [
+                {   "file"      : "boot_import_injections_user.ssp",
+                    "into"      : "boot.ssp",
+                    "point"     : "imports"
+                },              
+                {   "file"      : "boot_sitemap_injections_user.txt",
+                    "into"      : "boot.ssp",
+                    "point"     : "sitemap"
+                },              
+                {   "file"      : "boot_bottom_injections_user.txt",
+                    "into"      : "boot.ssp",
+                    "point"     : "bottom"
+                },              
+                {   "file"      : "boot_top_injections_user.txt",
+                    "into"      : "boot.ssp",
+                    "point"     : "top"
+                },              
+                {   "file"      : "ProjectDefinition_dependencies_injections_user.txt",
+                    "into"      : "Project.ssp",
+                    "point"     : "dependencies"
+                }
+            ]
+        },
+        {   "name"          : "dependencyFactory",
+            "description"   : "I really don't know what this is used for, Tim? David?",
+            "arguments"     : [
+                {   "name"          :   "libpack",
+                    "default"       :   "{libPack}" }
+            ],
+            "files"         : [
+                {   "file"          : "layout.ssp",
+                    "destination"   : "src/main/webapp/${layoutName}.html"
+                }
+            ]
+        },
+        {   "name"          : "project-blank",
+            "description"   : "Creates a blank Lift project that uses SBT as it's build system",
+            "arguments"     : [
+                {   "name"          :   "liftversion",
+                    "default"       :   "2.2" },
+                {   "name"          :   "mainpack",
+                    "default"       :   "{mainPackage}" }
+            ],
+            "files"         : [
+                {   "file"          : "Project.ssp",
+                    "destination"   : "project/build/Project.scala"},
+                {   "file"          : "LiftConsole.scala",
+                    "destination"   : "src/test/scala/LiftConsole.scala"},
+                {   "file"          : "RunWebApp.scala",
+                    "destination"   : "src/test/scala/RunWebApp.scala"},
+                {   "file"          : "default.props",
+                    "destination"   : "src/main/resources/props/default.props"},
+                {   "file"          : "default.html",
+                    "destination"   : "src/main/webapp/templates-hidden/default.html"},
+                {   "file"          : "404.html",
+                    "destination"   : "src/main/webapp/404.html"},
+                {   "file"          : "wizard-all.html",
+                    "destination"   : "src/main/webapp/templates-hidden/wizard-all.html"},
+                {   "file"          : "index.ssp",
+                    "destination"   : "src/main/webapp/index.html"},
+                {   "file"          : "boot.ssp",
+                    "destination"   : "src/main/scala/bootstrap/liftweb/Boot.scala"},
+                {   "file"          : "AppTest.ssp",
+                    "destination"   : "src/test/scala/${mainpack}/AppTest.scala"}
+            ]
+        },
+        {   "name"          : "project",
+            "description"   : "Creates a Lift project with some functionality to get you started",
+            "dependencies"  : ["project-blank", "user", "dependencyFactory"],
+            "arguments"     : [
+                {   "name"          :   "liftversion",
+                    "default"       :   "2.2" },
+                {   "name"          :   "mainpack",
+                    "default"       :   "{mainPackage}" }
+            ],
+            "files"         : [
+                {   "file"          : "index-static.html",
+                    "destination"   : "src/main/webapp/static/index.html"},
+                {   "file"          : "helloworld.ssp",
+                    "destination"   : "src/main/scala/${mainpack}/snippet/HelloWorld.scala"},
+                {   "file"          : "HelloWorldTest.ssp",
+                    "destination"   : "src/test/scala/${mainpack}/snippet/HelloWorldTest.scala"}
+            ],
+            "injections"    : [
+                {   "file"      : "boot_import_injections.ssp",
+                    "into"      : "boot.ssp",
+                    "point"     : "imports"
+                },              
+                {   "file"      : "boot_bottom_injections.ssp",
+                    "into"      : "boot.ssp",
+                    "point"     : "bottom"
+                },              
+                {   "file"      : "boot_sitemap_injections.ssp",
+                    "into"      : "boot.ssp",
+                    "point"     : "sitemap"
+                },              
+                {   "file"      : "index_content_injections.ssp",
+                    "into"      : "index.ssp",
+                    "point"     : "content"
+                },              
+                {   "file"      : "ProjectDefinition_dependencies_injections.ssp",
+                    "into"      : "Project.ssp",
+                    "point"     : "dependencies"
+                }
+            ]
+        }
+  ]
+}

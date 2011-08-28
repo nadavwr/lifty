@@ -1,0 +1,29 @@
+<%@ var cometName:String %>
+<%@ var cometpack:String %>
+
+package ${cometpack}
+
+import net.liftweb._
+import http._
+import SHtml._ 
+import common.{Box, Full}
+import util._
+import Helpers._
+import js.JsCmds.{SetHtml}
+import js.JE.Str
+
+class ${cometName} extends CometActor {
+      	// Intial bindings
+	def render = "#message" #> timeNow.toString
+	
+	// this is called 10sec after the instance is created
+	ActorPing.schedule(this, Message(), 10 seconds)
+	
+	override def lowPriority = {
+		case Message() => {
+			partialUpdate(SetHtml("message", timeNow.toString))
+			ActorPing.schedule(this, Message(), 10 seconds)
+		}
+	}
+}
+case class Message()

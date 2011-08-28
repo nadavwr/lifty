@@ -1,0 +1,11 @@
+<%@ var snippetName:String %>
+<%@ var snippetpack:String %>
+
+package ${snippetpack}
+
+import scala.xml.{NodeSeq}
+import net.liftweb.util.Helpers._
+
+class ${snippetName} {
+  def render = "*" #> <strong>hello world!</strong>
+}

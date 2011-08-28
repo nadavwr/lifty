@@ -1,0 +1,18 @@
+<%@ var modelName:String %>
+<%@ var modelpack:String %>
+<%@ var fields:List[String] %>
+
+package ${modelpack}
+
+import net.liftweb.mapper._
+
+class ${modelName} extends LongKeyedMapper[${modelName}] with IdPK {
+
+  def getSingleton = ${modelName}
+
+<% fields.foreach{ field => %>
+  object ${field} extends MappedString(this,256)
+<% } %>
+
+}
+object ${modelName} extends ${modelName} with LongKeyedMetaMapper[${modelName}]
