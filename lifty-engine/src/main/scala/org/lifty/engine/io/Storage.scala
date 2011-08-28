@@ -110,10 +110,6 @@ object HomeStorage extends Storage {
 
 }
 
-// object TestStorage extends Storage {
-//
-// }
-
 /*
   scala> import org.lifty.engine.io.HomeStorage
   import org.lifty.engine.io.HomeStorage

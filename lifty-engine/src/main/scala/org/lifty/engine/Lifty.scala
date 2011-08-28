@@ -46,26 +46,7 @@ trait Lifty extends InputParser {
         } yield {
           storageComponent.storeRecipe(name, new URL(urlStr)).unsafePerformIO.fold(
             error => error.fail,
-            recipe => {
-              """
- _     _  __ _         
-| |   (_)/ _| |_ _   _ 
-| |   | | |_| __| | | |
-| |___| |  _| |_| |_| |
-|_____|_|_|  \__|\__, |
-                 |___/
-
-Lifty successfully installed recipe with descriptor at 
-%s as %s.
-
-Run 'lifty templates %s' for info about the newly installed templates
-              
-Downloaded the following files: 
-  - %s
-  
-Happy hacking. 
-""".format(urlStr, name,name, recipe.templates.map(_.toString).mkString("\n  - "), recipe.toString).success
-            })
+            recipe => learnMsg(urlStr,name, recipe).success)
         }).getOrElse(Error("You have to supply a name and url for the recipe").fail)
       }
       
@@ -115,6 +96,26 @@ Happy hacking.
     storageComponent.recipe(recipeName).unsafePerformIO.flatMap { recipe => 
       DescriptionLoader.load(recipe.descriptor).unsafePerformIO
     } 
+  }
+  
+  def learnMsg(name: String, url: String, recipe: Recipe) = {"""
+_     _  __ _         
+| |   (_)/ _| |_ _   _ 
+| |   | | |_| __| | | |
+| |___| |  _| |_| |_| |
+|_____|_|_|  \__|\__, |
+       |___/
+
+Lifty successfully installed recipe with descriptor at 
+%s as %s.
+
+Run 'lifty templates %s' for info about the newly installed templates
+    
+Downloaded the following files: 
+- %s
+
+Happy hacking. 
+""".format(url,name,name, recipe.templates.map(_.toString).mkString("\n  - "))
   }
 }
 

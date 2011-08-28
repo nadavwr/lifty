@@ -10,7 +10,7 @@
             "arguments"     : [
                 {   "name"          :   "snippetName" },
                 {   "name"          :   "snippetpack",
-                    "default"       :   "{package}"}
+                    "default"       :   "${PACKAGE}"}
             ],
             "files"         : [
                 {   "file"          : "snippet.ssp",

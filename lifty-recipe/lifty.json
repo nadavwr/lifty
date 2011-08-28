@@ -101,7 +101,7 @@
             "arguments"     : [
                 {   "name"          :   "snippetName" },
                 {   "name"          :   "snippetpack",
-                    "default"       :   "{package}"}
+                    "default"       :   "${PACKAGE}.snippet"}
             ],
             "files"         : [
                 {   "file"          : "snippet.ssp",
@@ -115,7 +115,7 @@
             "arguments"     : [
                 {   "name"          :   "modelName" },
                 {   "name"          :   "modelpack",
-                    "default"       :   "{modelPackage}"    
+                    "default"       :   "${PACKAGE}.model"    
                 },
                 {   "name"          :   "fields",
                     "optional"      :   true,
@@ -133,7 +133,7 @@
             "arguments"     : [
                 {   "name"          :   "cometName" },
                 {   "name"          :   "cometpack",
-                    "default"       :   "{cometPackage}"
+                    "default"       :   "${PACKAGE}.comet"
                     
                 }
             ],
@@ -160,7 +160,7 @@
             "description"   : "Template for a model class implemented using Mapper. It provides basic functionality that would expect from a User",
             "arguments"     : [
                 {   "name"          :   "modelpack",
-                    "default"       :   "{modelPackage}"    
+                    "default"       :   "${PACKAGE}.model"    
                 }
             ],
             "files"         : [
@@ -209,7 +209,7 @@
                 {   "name"          :   "liftversion",
                     "default"       :   "2.2" },
                 {   "name"          :   "mainpack",
-                    "default"       :   "{mainPackage}" }
+                    "default"       :   "${PACKAGE}" }
             ],
             "files"         : [
                 {   "file"          : "Project.ssp",
@@ -241,7 +241,7 @@
                 {   "name"          :   "liftversion",
                     "default"       :   "2.2" },
                 {   "name"          :   "mainpack",
-                    "default"       :   "{mainPackage}" }
+                    "default"       :   "${PACKAGE}" }
             ],
             "files"         : [
                 {   "file"          : "index-static.html",
