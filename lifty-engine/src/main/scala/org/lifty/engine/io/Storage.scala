@@ -93,11 +93,13 @@ trait Storage {
   
   // TODO: shoud return an option. 
   private def storeSourcesOfDescription(recipeName: String, description: Description): List[File] = {     
-    description.sources.map { source => 
+    description.sources.flatMap { source => 
       download(new URL(source.url), file(List(storage.getAbsolutePath, recipeName, source.name).mkString(/)))
         .unsafePerformIO
-        .toOption
-        .get
+        .fold(
+          err => { println(err); None },
+          succ => Some(succ)
+        )
     }
   }
 }

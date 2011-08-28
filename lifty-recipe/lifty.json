@@ -69,29 +69,30 @@
         {   "name" : "wizard-all.html",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/wizard-all.html"
         },
+        
         {   "name" : "HelloWorldTest.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/HelloWorldTest.ssp"
         },
         {   "name" : "ProjectDefinition_dependencies_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/ProjectDefinition_dependencies_injections.ssp"
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/ProjectDefinition_dependencies_injections.ssp"
         },
         {   "name" : "boot_bottom_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/boot_bottom_injections.ssp"
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/boot_bottom_injections.ssp"
         },
         {   "name" : "boot_import_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/boot_import_injections.ssp"
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/boot_import_injections.ssp"
         },
         {   "name" : "boot_sitemap_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/boot_sitemap_injections.ssp"
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/boot_sitemap_injections.ssp"
         },
         {   "name" : "helloworld.ssp",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/helloworld.ssp"
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/helloworld.ssp"
         },
         {   "name" : "index-static.html",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/index-static.html"
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/index-static.html"
         },
         {   "name" : "index_content_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/index_content_injections.ssp"
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/basic-lift-project/index_content_injections.ssp"
         }
     ],
     "templates" : [
