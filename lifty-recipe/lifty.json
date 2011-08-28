@@ -1,5 +1,5 @@
 {
-    "repository" : "http://lifty.github.com/Lifty/templates",
+    "repository" : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates",
     "templates" : [
         {   "name"          : "snippet",
             "description"   : "creates a snippet",
