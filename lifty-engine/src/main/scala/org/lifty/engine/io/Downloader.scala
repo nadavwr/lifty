@@ -25,7 +25,7 @@ object Downloader {
       var text = new StringBuffer("")
 
       while (line != null) {
-        text.append(line)
+        text.append(line+"\n")
         line = in.readLine()
       }
 
