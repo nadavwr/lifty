@@ -16,7 +16,7 @@ import org.lifty.engine.{ Error }
 object Downloader {
   
   // Downloads a file from the interwebs and stores it locally. Returns a 
-  // reference to the new file if successfull
+  // reference to the new file if successful
   def download(from: URL, to: File): IO[Validation[Error,File]] = io {
     // eeeewwww, java api 
     try {

@@ -3,7 +3,7 @@ import Keys._
 
 object LiftyBuild extends Build {
 
-  lazy val projects = Seq(engine, plugin)
+  lazy override val projects = Seq(engine, plugin)
   
   lazy val engine = Project("lifty-engine", file("lifty-engine"))
   

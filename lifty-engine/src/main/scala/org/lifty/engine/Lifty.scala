@@ -69,8 +69,8 @@ trait Lifty extends InputParser {
           descriptionOfRecipe(name).flatMap { description => 
             parseTemplate(description, args.tail).flatMap { tuple => 
               val (template,rest) = tuple
-              parseArguments(template, rest).flatMap { env => 
-                env.toString.success
+              parseArguments(name, template, rest).flatMap { env => 
+                Scalate.run(env).success
               }
             }
           }

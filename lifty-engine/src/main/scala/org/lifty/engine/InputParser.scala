@@ -46,7 +46,7 @@ trait InputParser {
   /**
    * Given a Template and a list of arguments it will create an Environment.
    */
-  def parseArguments(template: Template, arguments: List[String]): Validation[Error, Environment] = {
+  def parseArguments(recipe: String, template: Template, arguments: List[String]): Validation[Error, Environment] = {
 
     // request input for an argument that is missing
     val requestInputForMissingArgument = (argument: Argument) => {
@@ -74,16 +74,16 @@ trait InputParser {
     val pairs = template.arguments.zip(arguments)
 
     if (pairs.size == template.arguments.size) { // correct number of arguments
-      Environment(template, Map(pairs.map(swapDefaults): _*)).success
+      Environment(recipe, template, Map(pairs.map(swapDefaults): _*)).success
     } else if (pairs.size < template.arguments.size) { // too few arguments. Request input
       val kvs = pairs.map(swapDefaults) :::
         template.arguments
         .slice(pairs.size, template.arguments.size) // get the missing arguments
         .filterNot(isOptional) // Don't care about the optional arguments here
         .map(requestInputForMissingArgument) // request input for the ones that are missing
-      Environment(template, Map(kvs: _*)).success
+      Environment(recipe, template, Map(kvs: _*)).success
     } else { // Too many. Deal with repeatable arguments
-      Environment(template, Map(pairs.map(swapDefaults): _*)).success
+      Environment(recipe, template, Map(pairs.map(swapDefaults): _*)).success
       // TODO: This will have to deal with repeatable arguments at some point
     }
   }

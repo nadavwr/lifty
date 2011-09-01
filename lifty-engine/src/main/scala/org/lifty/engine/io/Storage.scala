@@ -14,6 +14,7 @@ import java.io.{ File }
 import org.lifty.engine.{ Error, Description }
 import Downloader.{ download }
 import DescriptionLoader.{ load }
+import org.lifty.engine.io.FileUtil.{ file }
 
 case class Recipe(descriptor: File, templates: Seq[File])
 
@@ -31,25 +32,37 @@ case class Recipe(descriptor: File, templates: Seq[File])
 */
 trait Storage {
 
-  private val / = File.separator
-
   val root: File
 
-  // TODO: Create it if it doesn't exist
-  lazy val storage = file(root.getAbsolutePath + / + ".lifty")
+  lazy val storage = file(root.getAbsolutePath + / + ".lifty") // TODO: Create it if it doesn't exist
 
-  // attempts to fetch a recipe from the storage
+  /*
+   *
+   * Related to storing/fetching/deleting recipes
+   * 
+   */
+
+  /** 
+   * Attempts to fetch a recipe from the storage 
+   * 
+   * @param name The name of the recipe
+   */
   def recipe(name: String): IO[Validation[Error, Recipe]] = io {
     (for {
       folder     <- storage.listFiles.filter( f => f.isDirectory && f.getName == name ).headOption
       descriptor <- folder.listFiles.filter( f => f.isFile && f.getName == name+".json").headOption
     } yield {
-      val templates = folder.listFiles.filter( f => f.isFile && f.getName.split("\\.").lastOption.getOrElse("") == "ssp")
+      val templates = folder.listFiles.filter( f => f.isFile && f.getName.endsWith(".ssp"))
       Recipe(descriptor, templates).success
     }).getOrElse(Error("No recipe named %s in the storage.".format(name)).fail)
   }
 
-  // Attempts to store a recipe at the given url in the storage under the given name.
+  /** 
+   * Attempts to store a recipe at the given url in the storage under the given name. 
+   * 
+   * @param name The name of the recipe
+   * @param url The URL of the recipe's .json description file
+   */
   def storeRecipe(name: String, url: URL): IO[Validation[Error, Recipe]] = {
     
     val recipe = file(List(storage.getAbsolutePath, name, name+".json").mkString(/))
@@ -60,8 +73,10 @@ trait Storage {
       )
     )) 
   }
-  
-  // Returns a list with all of the recipes currently in the storage. 
+    
+  /** 
+   * Returns a list with all of the recipes currently in the storage.  
+   */
   def allRecipes: IO[List[Recipe]] = io {
     storage.listFiles
            .filter( _.isDirectory)
@@ -71,7 +86,11 @@ trait Storage {
            .toList
   }
   
-  // Deletes a recipe from the store
+  /** 
+   * Deletes a recipe from the store 
+   * 
+   * @param name The name of the recipe
+   */
   def deleteRecipe(name: String): IO[String] = io {
     storage.listFiles
            .filter( f => f.isDirectory && f.getName == name )
@@ -79,6 +98,24 @@ trait Storage {
            .foreach( recursiveDelete )
     "Removed %s from the storage".format(name)
   }
+  
+  /*
+   *
+   * Related to fetching template files of a specific recipe. 
+   * 
+   */
+  
+  def template(recipe: String, template: String): IO[Option[File]] = io {
+    file(storage.getAbsolutePath + / + recipe).listFiles.filter( _.getName == template).headOption
+  }   
+   
+  /*
+   *
+   * Misc. helper functions. 
+   * 
+   */
+  
+  private val / = File.separator
   
   private def recursiveDelete(file: File): Unit = {
     if (file.isDirectory && !file.listFiles.isEmpty) {
@@ -89,10 +126,8 @@ trait Storage {
     }
   }
   
-  protected def file(path: String) = new File(path)
-  
-  // TODO: shoud return an option. 
   private def storeSourcesOfDescription(recipeName: String, description: Description): List[File] = {     
+    // TODO: should return an option. 
     description.sources.flatMap { source => 
       download(new URL(source.url), file(List(storage.getAbsolutePath, recipeName, source.name).mkString(/)))
         .unsafePerformIO
@@ -109,21 +144,3 @@ object HomeStorage extends Storage {
   val root = file(System.getProperty("user.home"))
 
 }
-
-/*
-  scala> import org.lifty.engine.io.HomeStorage
-  import org.lifty.engine.io.HomeStorage
-
-  scala> HomeStorage.deleteRecipe("test")      
-  res0: scalaz.effects.IO[String] = scalaz.effects.IO$$anon$2@1832bab5
-
-  scala> res0.unsafePerformIO                  
-  res1: String = Removed test from the storage
-
-  scala> HomeStorage.storeRecipe("test", new java.net.URL("https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-engine/src/test/resources/test-descriptor.json"))
-  res2: scalaz.effects.IO[scalaz.Validation[org.lifty.engine.Error,org.lifty.engine.io.Recipe]] = scalaz.effects.IO$$anon$2@49119a3a
-
-  scala> res2.unsafePerformIO
-  res3: scalaz.Validation[org.lifty.engine.Error,org.lifty.engine.io.Recipe] = Success(Recipe(/Users/Mads/.lifty/test/test.json,List(/Users/Mads/.lifty/test/snippet)))
-
-*/

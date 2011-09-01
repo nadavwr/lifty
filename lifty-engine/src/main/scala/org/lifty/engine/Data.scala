@@ -14,7 +14,7 @@ object RecipesCommand extends Command { val keyword = "recipes" }
 
 case class Error(message: String)
 
-case class Environment(template: Template, values: Map[String,String])
+case class Environment(recipe: String, template: Template, values: Map[String,String])
 
 /*
   The following are the case classes needed to describe a Lifty-engine application
