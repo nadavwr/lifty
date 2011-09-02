@@ -44,7 +44,7 @@ trait InputParser {
   }
 
   /**
-   * Given a Template and a list of arguments it will create an Environment.
+   * Will request values for each for the arguments of the template and dependent templates. 
    */
   def parseArguments(recipe: String, template: Template, description: Description): Validation[Error, Environment] = {
 

@@ -25,7 +25,12 @@ object Scalate {
       processTemplate(file,env) 
     }
     
-    "done"
+    toCopy.foreach { file => 
+      println("Copying file: " + file.file)
+      copyTemplate(file,env)
+    }
+    
+    "Done."
   }
   
   /*
@@ -33,6 +38,16 @@ object Scalate {
    * Methods related to processing the Scalate templates. 
    *
    */
+
+  private def copyTemplate(template: TemplateFile, env: Environment): (TemplateFile, Boolean) = {
+    HomeStorage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
+      val destination = replaceVariables(template.destination, env) |> properPath |> file
+      for {
+        templateStr <- readToString(templateFile).unsafePerformIO
+        result      <- writeToFile(templateStr, destination)
+      } yield (template, true)
+    } getOrElse (template, false)
+  }
 
   /** 
    * Processes a single TemplateFile.  
@@ -43,7 +58,6 @@ object Scalate {
   private def processTemplate(template: TemplateFile, env: Environment): (TemplateFile, Boolean) = {
     
     HomeStorage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
-      
       val destination = replaceVariables(template.destination, env) |> properPath |> file 
             
       for {
