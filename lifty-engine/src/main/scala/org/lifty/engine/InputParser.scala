@@ -46,7 +46,7 @@ trait InputParser {
   /**
    * Given a Template and a list of arguments it will create an Environment.
    */
-  def parseArguments(recipe: String, template: Template, arguments: List[String]): Validation[Error, Environment] = {
+  def parseArguments(recipe: String, template: Template, description: Description): Validation[Error, Environment] = {
 
     // request input for an argument that is missing
     val requestInputForMissingArgument = (argument: Argument) => {
@@ -56,36 +56,10 @@ trait InputParser {
                       .unsafePerformIO // TODO: Performing IO
       (argument.name, value) // TODO: This is a side-effect. IO-Monad?
     }
+    
+    val kvs = description.allArguments(template).map(requestInputForMissingArgument(_))
+    Environment(recipe, template, Map(kvs: _*)).success
 
-    // map arguments to a string and swap defaults. Request input if no default exists
-    val swapDefaults = (tuple: (Argument, String)) => {
-      val (argument, value) = tuple
-      if (value == "_") {
-        requestInputForMissingArgument(argument)
-      } else (argument.name, value)
-    }
-
-    // filter optional arguments
-    val isOptional = (argument: Argument) => {
-      !argument.optional.isEmpty && argument.optional.get == true
-    }
-
-    // pair the values passed with the arguments needed
-    val pairs = template.arguments.zip(arguments)
-
-    if (pairs.size == template.arguments.size) { // correct number of arguments
-      Environment(recipe, template, Map(pairs.map(swapDefaults): _*)).success
-    } else if (pairs.size < template.arguments.size) { // too few arguments. Request input
-      val kvs = pairs.map(swapDefaults) :::
-        template.arguments
-        .slice(pairs.size, template.arguments.size) // get the missing arguments
-        .filterNot(isOptional) // Don't care about the optional arguments here
-        .map(requestInputForMissingArgument) // request input for the ones that are missing
-      Environment(recipe, template, Map(kvs: _*)).success
-    } else { // Too many. Deal with repeatable arguments
-      Environment(recipe, template, Map(pairs.map(swapDefaults): _*)).success
-      // TODO: This will have to deal with repeatable arguments at some point
-    }
   }
 
 }

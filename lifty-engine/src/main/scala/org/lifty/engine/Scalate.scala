@@ -10,12 +10,14 @@ object Scalate {
   import Functional._
   import Util.{ properPath, packageAsPath }
 
-  def run(env: Environment): String = {
+  def run(env: Environment, description: Description): String = {
     
     val isRenderable = (file: TemplateFile) => file.file.endsWith(".ssp") // TODO: add support for other template languages
     
-    val toRender = env.template.files.filter( isRenderable ) 
-    val toCopy   = env.template.files.filterNot( isRenderable )
+    val files = env.template.files ::: description.dependenciesOfTemplate(env.template).flatMap(_.files)
+    
+    val toRender = files.filter( isRenderable ) 
+    val toCopy   = files.filterNot( isRenderable )
     
     // toRender.map ( processTemplate )
     toRender.foreach { file => 

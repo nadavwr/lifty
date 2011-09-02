@@ -21,7 +21,29 @@ case class Environment(recipe: String, template: Template, values: Map[String,St
   in JSON
 */
 
-case class Description(templates: List[Template],sources: List[Source])
+case class Description(templates: List[Template],sources: List[Source]) {
+  
+  
+  def templateNamed(name: String): Option[Template] = {
+    templates.find( _.name == name)
+  }
+  
+  def allArguments(template: Template): List[Argument] = {
+    val directArguments = template.arguments
+    val transitive      = dependenciesOfTemplate(template).flatMap( _.arguments)
+    (directArguments ::: transitive).distinct
+  }
+  
+  /** 
+   * Get the dependencies (also the transitive ones) of a Template
+   */
+  def dependenciesOfTemplate(template: Template): List[Template] = {    
+    val directDependencies = template.dependencies.flatMap { templateNamed(_) }
+    val transitive         = directDependencies.flatMap { dependenciesOfTemplate(_) }
+    directDependencies ::: transitive  
+  }
+  
+}
 
 case class Template(
   name:           String,
@@ -45,7 +67,6 @@ case class TemplateFile(
 case class Argument(
   name:         String,
   default:      Option[String],
-  optional:     Option[Boolean],
   repeatable:   Option[Boolean])
 
 case class TemplateInjection(
