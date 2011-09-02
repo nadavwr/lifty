@@ -116,10 +116,7 @@
                 {   "name"          :   "modelName" },
                 {   "name"          :   "modelpack",
                     "default"       :   "${PACKAGE}.model"    
-                },
-                {   "name"          :   "fields",
-                    "optional"      :   true,
-                    "repeatable"    :   true}
+                }
             ],
             "files"         : [
                 {   "file"          : "mapper.ssp",
@@ -195,11 +192,11 @@
             "description"   : "I really don't know what this is used for, Tim? David?",
             "arguments"     : [
                 {   "name"          :   "libpack",
-                    "default"       :   "{libPack}" }
+                    "default"       :   "${PACKAGE}.lib" }
             ],
             "files"         : [
-                {   "file"          : "layout.ssp",
-                    "destination"   : "src/main/webapp/${layoutName}.html"
+                {   "file"          : "dependencyFactory.ssp",
+                    "destination"   : "src/main/scala/${libpack}/DependencyFactory.scala"
                 }
             ]
         },
