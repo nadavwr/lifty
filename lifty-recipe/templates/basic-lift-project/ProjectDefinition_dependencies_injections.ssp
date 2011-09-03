@@ -1,1 +1,2 @@
-    val wizard = "net.liftweb" %% "lift-wizard" % liftVersion % "compile->default"
+
+libraryDependencies += "net.liftweb" %% "lift-wizard" % liftVersion % "compile->default"

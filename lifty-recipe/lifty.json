@@ -15,6 +15,7 @@
         {   "name" : "comet.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/comet.ssp"
         },
+        
         {   "name" : "ProjectDefinition_dependencies_injections_user.txt",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/user/ProjectDefinition_dependencies_injections_user.txt"
         },
@@ -33,6 +34,13 @@
         {   "name" : "user.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/user/user.ssp"
         },
+        
+        {   "name" : "main_build.ssp",
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/main_build.ssp"
+        },
+        {   "name" : "plugin_build.ssp",
+            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/plugin_build.ssp"
+        },
         {   "name" : "404.html",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/404.html"
         },
@@ -41,9 +49,6 @@
         },
         {   "name" : "LiftConsole.scala",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/LiftConsole.scala"
-        },
-        {   "name" : "Project.ssp",
-            "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/Project.ssp"
         },
         {   "name" : "RunWebApp.scala",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/blank-lift-project/RunWebApp.scala"
@@ -183,7 +188,7 @@
                     "point"     : "top"
                 },              
                 {   "file"      : "ProjectDefinition_dependencies_injections_user.txt",
-                    "into"      : "Project.ssp",
+                    "into"      : "main_build.ssp",
                     "point"     : "dependencies"
                 }
             ]
@@ -206,11 +211,17 @@
                 {   "name"          :   "liftversion",
                     "default"       :   "2.2" },
                 {   "name"          :   "mainpack",
-                    "default"       :   "${PACKAGE}" }
+                    "default"       :   "${PACKAGE}" },
+                {   "name"          :   "projectName",
+                    "default"       :   "${PROJECT_NAME}" },
+                {   "name"          :   "scalaVersion",
+                    "default"       :   "${SCALA_VERSION}" }
             ],
             "files"         : [
-                {   "file"          : "Project.ssp",
-                    "destination"   : "project/build/Project.scala"},
+                {   "file"          : "main_build.ssp",
+                    "destination"   : "build.sbt"},
+                {   "file"          : "plugin_build.ssp",
+                    "destination"   : "/project/plugins/build.sbt"},
                 {   "file"          : "LiftConsole.scala",
                     "destination"   : "src/test/scala/LiftConsole.scala"},
                 {   "file"          : "RunWebApp.scala",
@@ -266,7 +277,7 @@
                     "point"     : "content"
                 },              
                 {   "file"      : "ProjectDefinition_dependencies_injections.ssp",
-                    "into"      : "Project.ssp",
+                    "into"      : "main_build.ssp",
                     "point"     : "dependencies"
                 }
             ]
