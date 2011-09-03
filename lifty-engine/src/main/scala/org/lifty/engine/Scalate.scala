@@ -22,7 +22,7 @@ object Scalate {
     // toRender.map ( processTemplate )
     toRender.foreach { file => 
       println("Rendering: " + file.file)
-      processTemplate(file,env) 
+      processTemplate(file,env, description) 
     }
     
     toCopy.foreach { file => 
@@ -55,14 +55,14 @@ object Scalate {
    * @param template  The TemplateFile to process
    * @param env       The environment in which the template was invoked (i.e. CLI arguments etc.)
    */
-  private def processTemplate(template: TemplateFile, env: Environment): (TemplateFile, Boolean) = {
+  private def processTemplate(template: TemplateFile, env: Environment, description: Description): (TemplateFile, Boolean) = {
     
     HomeStorage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
       val destination = replaceVariables(template.destination, env) |> properPath |> file 
             
       for {
         templateStr <- readToString(templateFile).unsafePerformIO
-        injectedStr <- Some(inject(templateStr))
+        injectedStr <- Some(inject(templateStr, template, env, description))
         tempFile    <- writeToTempFile(injectedStr)
         renderedStr <- Some(render(tempFile, env))
         result      <- writeToFile(renderedStr, destination)
@@ -77,8 +77,38 @@ object Scalate {
    *
    */
     
-  private def inject(rawTemplate: String): String = {
-    rawTemplate
+  private def inject(rawTemplate: String, 
+                     templateFile: TemplateFile, 
+                     env: Environment, 
+                     description: Description): String = {
+    
+    val regxp = """\/{2}\#inject\spoint\:\s(\w*)""".r
+    
+    rawTemplate.split("\n").map { line => 
+      if (!regxp.findFirstIn(line).isEmpty) {
+        val point = regxp.findFirstMatchIn(line).get.group(1)
+        injectionsForPointInFile(point, templateFile, description, env.template).map { injection => 
+          HomeStorage.template(env.recipe, injection.file).unsafePerformIO.flatMap { injectionFile =>
+            readToString(injectionFile).unsafePerformIO
+          }.getOrElse {
+            println("Tried to load " + injection.file + " but failed")
+            ""
+          }
+        }.mkString("")
+      } else line 
+    }.mkString("\n")
+  }
+  
+  private def injectionsForPointInFile(point: String, 
+                                       templateFile: TemplateFile, 
+                                       description: Description,
+                                       rendering: Template): List[TemplateInjection] = {
+    
+    val dependencies = description.dependenciesOfTemplate(rendering)
+    val injections   = dependencies.flatMap { _.injections } ::: rendering.injections 
+    
+    injections.filter( _.into == templateFile.file )
+              .filter( _.point == point)
   }
   
   /*
