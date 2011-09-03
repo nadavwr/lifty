@@ -44,7 +44,7 @@ object FileUtil {
     try {      
       val file = File.createTempFile("lifty",".ssp")
       file.deleteOnExit() // delete when the VM exists. 
-      writeToFile(contents,file)
+      writeToFile(contents,file, check = false)
     } catch {
       case e: Exception => 
         e.printStackTrace()
@@ -59,8 +59,9 @@ object FileUtil {
    * @param file      The File to write to
    * @return          The File that it wrote the contents to.
    */
-  def writeToFile(contents: String, file: File): Option[File] = {
-    try {      
+  def writeToFile(contents: String, file: File, check: Boolean = true): Option[File] = {
+    
+    def create() = {
       if (file.isDirectory) {
         file.mkdirs()
       } else {
@@ -71,11 +72,31 @@ object FileUtil {
       out.write(contents);
       out.close();
       Some(file)
+    }
+    
+    try {
+      if (check) {
+        if (safeToCreateFile(file)) create() else None 
+      } else create()
     } catch {
       case e: Exception => 
         e.printStackTrace()
         None
     }
+  }
+  
+  private def safeToCreateFile(file: File): Boolean = {
+    
+    def askUser: Boolean = {
+      val question = "The file %s exists, do you want to override it? (y/n): ".format(file.getPath)
+      InputReaderComponent.requestInput(question).unsafePerformIO match {
+        case "y" => true
+        case "n" => false
+        case _ => askUser
+      }
+    }
+    
+    if (file.exists) askUser else true
   }
   
 }
