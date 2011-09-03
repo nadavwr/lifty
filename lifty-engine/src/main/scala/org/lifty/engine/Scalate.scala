@@ -30,6 +30,10 @@ object Scalate {
       copyTemplate(file,env)
     }
     
+    invalidInjections(env.template, description).foreach { templateInjection => 
+      println("Wasn't able to inject " + templateInjection)
+    }
+    
     "Done."
   }
   
@@ -109,6 +113,14 @@ object Scalate {
     
     injections.filter( _.into == templateFile.file )
               .filter( _.point == point)
+  }
+  
+  private def invalidInjections(template: Template, description: Description): List[TemplateInjection] = {
+    val dependencies    = description.dependenciesOfTemplate(template)
+    val injections      = dependencies.flatMap { _.injections } ::: template.injections 
+    val files           = template.files ::: description.dependenciesOfTemplate(template).flatMap(_.files)
+    val validInjections = injections.filter( injection => files.contains(injection.into))
+    injections filter ( (injection) => !validInjections.contains(injection))
   }
   
   /*
