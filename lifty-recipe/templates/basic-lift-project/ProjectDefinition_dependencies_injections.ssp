@@ -1,1 +1,1 @@
-libraryDependencies += "net.liftweb" %% "lift-wizard" % liftVersion % "compile->default"
+libraryDependencies += "net.liftweb" %% "lift-wizard" % "${liftversion}" % "compile->default"
