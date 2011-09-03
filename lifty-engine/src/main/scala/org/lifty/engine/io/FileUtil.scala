@@ -21,9 +21,14 @@ object FileUtil {
       val in   = new BufferedReader(new InputStreamReader(new FileInputStream(file)))
       var line = in.readLine()
       var text = new StringBuffer("")
-
+      var first = true
       while (line != null) {
-        text.append(line+"\n")
+        if (first) {
+          text.append(line)
+          first = false
+        } else {
+          text.append("\n"+line)
+        }
         line = in.readLine()
       }
       Some(text.toString)

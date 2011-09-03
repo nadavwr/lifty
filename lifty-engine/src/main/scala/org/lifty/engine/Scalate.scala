@@ -98,9 +98,9 @@ object Scalate {
             println("Tried to load " + injection.file + " but failed")
             ""
           }
-        }.mkString("")
+        }.mkString("\n") // Adding newlines between injections. 
       } else line 
-    }.mkString("\n")
+    }.mkString("\n") // joining all the lines together again.
   }
   
   private def injectionsForPointInFile(point: String, 

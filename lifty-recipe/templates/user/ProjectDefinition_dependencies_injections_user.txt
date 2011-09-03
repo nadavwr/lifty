@@ -1,4 +1,3 @@
-
 libraryDependencies += "net.liftweb" %% "lift-mapper" % "${liftversion}" % "compile->default"
 
 libraryDependencies += "com.h2database" % "h2" % "1.2.138"
