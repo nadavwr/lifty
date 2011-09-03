@@ -118,9 +118,9 @@ object Scalate {
   private def invalidInjections(template: Template, description: Description): List[TemplateInjection] = {
     val dependencies    = description.dependenciesOfTemplate(template)
     val injections      = dependencies.flatMap { _.injections } ::: template.injections 
-    val files           = template.files ::: description.dependenciesOfTemplate(template).flatMap(_.files)
+    val files           = template.files.map(_.file) ::: dependencies.flatMap(_.files).map(_.file)
     val validInjections = injections.filter( injection => files.contains(injection.into))
-    injections filter ( (injection) => !validInjections.contains(injection))
+    injections filter ( injection => !validInjections.contains(injection))
   }
   
   /*

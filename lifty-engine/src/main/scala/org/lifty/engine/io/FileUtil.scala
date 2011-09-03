@@ -61,11 +61,14 @@ object FileUtil {
    */
   def writeToFile(contents: String, file: File, check: Boolean = true): Option[File] = {
     
+    import org.lifty.engine.Functional._
+    
     def create() = {
       if (file.isDirectory) {
         file.mkdirs()
       } else {
-        file.getParentFile.mkdirs()
+        val parentPath = file.getAbsolutePath.split(File.separator).init.mkString(File.separator) 
+        new File(parentPath).mkdirs()
         file.createNewFile()
       }
       val out = new BufferedWriter(new FileWriter(file));

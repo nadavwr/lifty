@@ -209,7 +209,7 @@
             "description"   : "Creates a blank Lift project that uses SBT as it's build system",
             "arguments"     : [
                 {   "name"          :   "liftversion",
-                    "default"       :   "2.2" },
+                    "default"       :   "2.4-M3" },
                 {   "name"          :   "mainpack",
                     "default"       :   "${PACKAGE}" },
                 {   "name"          :   "projectName",
@@ -247,7 +247,7 @@
             "dependencies"  : ["project-blank", "user", "dependencyFactory"],
             "arguments"     : [
                 {   "name"          :   "liftversion",
-                    "default"       :   "2.2" },
+                    "default"       :   "2.4-M3" },
                 {   "name"          :   "mainpack",
                     "default"       :   "${PACKAGE}" }
             ],
