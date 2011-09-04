@@ -30,7 +30,7 @@ trait Lifty extends InputParser {
     } yield runCommand(command, rest)) getOrElse( Error("No such command").fail )
   }
 
-  // Given a Command and a list og arguments this will run the actions
+  // Given a Command and a list and arguments this will run the actions
   // associated with the Command and return the result as a String.
   private def runCommand(command: Command, args: List[String]): Validation[Error, String] = {    
     command match {
@@ -46,7 +46,7 @@ trait Lifty extends InputParser {
         } yield {
           storageComponent.storeRecipe(name, new URL(urlStr)).unsafePerformIO.fold(
             error => error.fail,
-            recipe => learnMsg(urlStr,name, recipe).success)
+            recipe => learnMsg(name,urlStr, recipe).success)
         }).getOrElse(Error("You have to supply a name and url for the recipe").fail)
       }
       
@@ -62,7 +62,12 @@ trait Lifty extends InputParser {
       }
 
       case HelpCommand =>
-        "you invoked the help command".success
+        ("help                         Shows this message" ::
+        "create <recipe> <template>   Create a template from the given recipe" ::
+        "templates <recipe>           List all the templates defined by the recipe" ::
+        "learn <name> <url>           Learn the recipe at the given URL and store it locally under the given name" ::
+        "recipes                      Lists all installed recipes" ::
+        "update <recipe>              Update the recipe if a new version exists" :: Nil).mkString("\n").success
 
       case CreateCommand => {
         args.headOption.map { name => 
@@ -99,7 +104,7 @@ trait Lifty extends InputParser {
   }
   
   def learnMsg(name: String, url: String, recipe: Recipe) = {"""
-_     _  __ _         
+ _     _  __ _         
 | |   (_)/ _| |_ _   _ 
 | |   | | |_| __| | | |
 | |___| |  _| |_| |_| |
