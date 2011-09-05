@@ -36,7 +36,11 @@ trait Lifty extends InputParser {
     command match {
       
       case RecipesCommand => {
-        storageComponent.allRecipes.unsafePerformIO.map(_.toString).mkString("\n").success
+        ("" ::
+        "The following recipes are installed: " :: 
+        "" ::
+        storageComponent.allRecipes.unsafePerformIO.map(_.name).mkString("\n") ::
+        "" :: Nil).mkString("\n").success
       }
 
       case LearnCommand => {        
@@ -63,12 +67,15 @@ trait Lifty extends InputParser {
 
       case HelpCommand =>
         (
+        "" ::
         "help                         Shows this message" ::
         "create <recipe> <template>   Create a template from the given recipe" ::
         "templates <recipe>           List all the templates defined by the recipe" ::
         "learn <name> <url>           Learn the recipe at the given URL and store it locally under the given name" ::
+        "remove <name>                Deletes a recipe. " ::
         "recipes                      Lists all installed recipes" ::
-        "update <recipe>              Update the recipe if a new version exists" :: Nil).mkString("\n").success
+        "update <recipe>              Update the recipe if a new version exists" ::
+        "" :: Nil).mkString("\n").success
 
       case CreateCommand => {
         args.headOption.map { name => 

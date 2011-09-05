@@ -16,7 +16,7 @@ import Downloader.{ download }
 import DescriptionLoader.{ load }
 import org.lifty.engine.io.FileUtil.{ file }
 
-case class Recipe(descriptor: File, templates: Seq[File])
+case class Recipe(name: String, descriptor: File, templates: Seq[File])
 
 /*
   Storage component. It's used to download, store and fetch the local versions of the
@@ -53,7 +53,7 @@ trait Storage {
       descriptor <- folder.listFiles.filter( f => f.isFile && f.getName == name+".json").headOption
     } yield {
       val templates = folder.listFiles.filter( f => f.isFile && f.getName.endsWith(".ssp"))
-      Recipe(descriptor, templates).success
+      Recipe(name, descriptor, templates).success
     }).getOrElse(Error("No recipe named %s in the storage.".format(name)).fail)
   }
 
@@ -71,7 +71,7 @@ trait Storage {
 
         download(url, recipe).unsafePerformIO.fold( err => err.fail,
           file => load(file).unsafePerformIO.fold( err => err.fail,
-            description => Recipe(file, storeSourcesOfDescription(name, description)).success
+            description => Recipe(name, file, storeSourcesOfDescription(name, description)).success
           )
         )
       },
