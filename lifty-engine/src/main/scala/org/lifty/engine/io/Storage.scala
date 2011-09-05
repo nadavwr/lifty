@@ -63,15 +63,20 @@ trait Storage {
    * @param name The name of the recipe
    * @param url The URL of the recipe's .json description file
    */
-  def storeRecipe(name: String, url: URL): IO[Validation[Error, Recipe]] = {
+  def storeRecipe(name: String, url: URL): IO[Validation[Error, Recipe]] = io {
     
-    val recipe = file(List(storage.getAbsolutePath, name, name+".json").mkString(/))
+    recipe(name).unsafePerformIO.fold(
+      (e) => {
+        val recipe = file(List(storage.getAbsolutePath, name, name+".json").mkString(/))
 
-    download(url, recipe).map( _.fold( err => err.fail,
-      file => load(file).unsafePerformIO.fold( err => err.fail,
-        description => Recipe(file, storeSourcesOfDescription(name, description)).success
-      )
-    )) 
+        download(url, recipe).unsafePerformIO.fold( err => err.fail,
+          file => load(file).unsafePerformIO.fold( err => err.fail,
+            description => Recipe(file, storeSourcesOfDescription(name, description)).success
+          )
+        )
+      },
+      (s) => Error("A recipe with that name already exists. use 'lifty update %s' to update it.".format(name)).fail
+    )
   }
     
   /** 

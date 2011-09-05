@@ -135,7 +135,7 @@ Lifty successfully installed recipe with descriptor at
 Run 'lifty templates %s' for info about the newly installed templates
     
 Downloaded the following files: 
-- %s
+  - %s
 
 Happy hacking. 
 """.format(url,name,name, recipe.templates.map(_.toString).mkString("\n  - "))
