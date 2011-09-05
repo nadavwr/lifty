@@ -62,7 +62,8 @@ trait Lifty extends InputParser {
       }
 
       case HelpCommand =>
-        ("help                         Shows this message" ::
+        (
+        "help                         Shows this message" ::
         "create <recipe> <template>   Create a template from the given recipe" ::
         "templates <recipe>           List all the templates defined by the recipe" ::
         "learn <name> <url>           Learn the recipe at the given URL and store it locally under the given name" ::
@@ -82,15 +83,32 @@ trait Lifty extends InputParser {
         } getOrElse( Error("You have to supply the name of the recipe").fail )
       }
         
-      // TODO: Re-implement this so it compiles again
-      // case UpdateTemplatesCommand => 
-      //   (description.templates.flatMap { _.files } map { file => 
-      //     (file.file, description.repository +"/"+ file.file) // '/' is okay. It's a URI
-      //   } map { case (filePath, uri) => 
-      //     TemplateDownloader.downloadTemplate(new URI(uri),filePath) // SIDEEFFECT
-      //     "Downloaded template: %s".format(uri)
-      //   }).mkString("\n").success
-
+      case UpdateTemplatesCommand => {
+        args.headOption.map { recipeName => 
+          HomeStorage.recipe(recipeName).unsafePerformIO.fold(
+            (e) => Error("No recipe with that name exists.").fail, 
+            (s) => DescriptionLoader.load(s.descriptor).unsafePerformIO.fold(
+              (e) => Error("Wasn't able to parse the local .json file. Please uninstall and re-learn the recipe.").fail,
+              (s) => {
+                val origin = new URL(s.origin)
+                val version = s.version
+                DescriptionLoader.load(origin).unsafePerformIO.fold(
+                  (e) => e.fail,
+                  (s) => if (s.version > version) {
+                    HomeStorage.storeRecipe(recipeName, origin).unsafePerformIO.fold(
+                      (e) => e.fail,
+                      (s) => "Successfully updated the recipe.".format(version).success
+                    )
+                  } else {
+                    "You have the most recent version of the recipe installed.".success
+                  }
+                )
+              }
+            )
+          )   
+        } getOrElse( Error("You have to supply the name of the recipe. ").fail )
+      }
+      
       case _ =>
         Error("Command doesn't exist").fail
     }

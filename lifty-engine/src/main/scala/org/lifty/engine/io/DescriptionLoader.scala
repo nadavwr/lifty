@@ -4,7 +4,8 @@ import org.lifty.engine.{ Description, Error }
 import scalaz._
 import scalaz.effects._
 import Scalaz._
-import java.io.{ FileInputStream, InputStreamReader, File }
+import java.io.{ FileInputStream, InputStreamReader, File}
+import java.net.{ URL }
 import net.liftweb.json.{ JsonParser, DefaultFormats }
 
 /** 
@@ -15,6 +16,18 @@ object DescriptionLoader {
 
   // Simply so it knows how to println this stuff for debugging.
   implicit val formats = DefaultFormats
+
+  def load(description: URL): IO[Validation[Error, Description]] = io {
+    val file = File.createTempFile("descriptor",".json")
+    file.deleteOnExit() 
+    Downloader.download(description, file).unsafePerformIO.fold(
+      (e) => e.fail,
+      (s) => load(file).unsafePerformIO.fold(
+        (e) => e.fail,
+        (s) => s.success
+      )
+    )
+  }
 
   // Load a json description of a recipe 
   def load(description: File): IO[Validation[Error, Description]] = io {

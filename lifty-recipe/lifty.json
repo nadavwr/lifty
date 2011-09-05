@@ -1,5 +1,7 @@
 {
-    "sources": [
+    "origin"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/lifty.json",
+    "version" : 1,
+    "sources" : [
         {   "name" : "snippet.ssp",
             "url"  : "https://raw.github.com/Lifty/Lifty-engine/xlifty/lifty-recipe/templates/snippet.ssp"
         },

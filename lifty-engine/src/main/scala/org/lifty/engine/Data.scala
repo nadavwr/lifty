@@ -21,7 +21,11 @@ case class Environment(recipe: String, template: Template, values: Map[String,St
   in JSON
 */
 
-case class Description(templates: List[Template],sources: List[Source]) {
+case class Description(
+  origin: String,
+  version: Int, 
+  templates: List[Template],
+  sources: List[Source]) {
   
   
   def templateNamed(name: String): Option[Template] = {
