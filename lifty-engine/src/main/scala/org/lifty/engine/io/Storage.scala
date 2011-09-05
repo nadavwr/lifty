@@ -96,12 +96,16 @@ trait Storage {
    * 
    * @param name The name of the recipe
    */
-  def deleteRecipe(name: String): IO[String] = io {
-    storage.listFiles
-           .filter( f => f.isDirectory && f.getName == name )
-           .headOption
-           .foreach( recursiveDelete )
-    "Removed %s from the storage".format(name)
+  def deleteRecipe(name: String): IO[Validation[Error, String]] = io {
+    recipe(name).unsafePerformIO.fold(
+      (e) => Error("No recipe named %s installed.".format(name)).fail,
+      (s) => {
+        storage.listFiles
+               .filter( f => f.isDirectory && f.getName == name )
+               .headOption
+               .foreach( recursiveDelete )
+        "Removed %s from the storage".format(name).success
+      })    
   }
   
   /*

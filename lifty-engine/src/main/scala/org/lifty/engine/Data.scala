@@ -11,6 +11,7 @@ object TemplatesCommand extends Command { val keyword = "templates"}
 object UpdateTemplatesCommand extends Command { val keyword = "update"}
 object LearnCommand extends Command { val keyword = "learn" }
 object RecipesCommand extends Command { val keyword = "recipes" }
+object DeleteCommand extends Command { val keyword = "delete" } 
 
 case class Error(message: String)
 

@@ -109,36 +109,34 @@ trait Lifty extends InputParser {
         } getOrElse( Error("You have to supply the name of the recipe. ").fail )
       }
       
+      case DeleteCommand => {
+        args.headOption.map { recipeName => 
+          HomeStorage.deleteRecipe(recipeName).unsafePerformIO.fold(
+            (e) => e.fail,
+            (s) => s.success
+          )
+        } getOrElse( Error("You have to supply the name of the recipe. ").fail )
+      }
+      
       case _ =>
         Error("Command doesn't exist").fail
     }
   }
   
   private def descriptionOfRecipe(recipeName: String): Validation[Error,Description] = {
-    // TODO: Performs IO 
     storageComponent.recipe(recipeName).unsafePerformIO.flatMap { recipe => 
       DescriptionLoader.load(recipe.descriptor).unsafePerformIO
     } 
   }
   
-  def learnMsg(name: String, url: String, recipe: Recipe) = {"""
- _     _  __ _         
-| |   (_)/ _| |_ _   _ 
-| |   | | |_| __| | | |
-| |___| |  _| |_| |_| |
-|_____|_|_|  \__|\__, |
-       |___/
-
-Lifty successfully installed recipe with descriptor at 
-%s as %s.
-
-Run 'lifty templates %s' for info about the newly installed templates
-    
-Downloaded the following files: 
-  - %s
-
-Happy hacking. 
-""".format(url,name,name, recipe.templates.map(_.toString).mkString("\n  - "))
+  def learnMsg(name: String, url: String, recipe: Recipe) = {
+    "\n"+
+    "Lifty successfully installed recipe with %s. \n".format(name) +
+    "\n"+
+    "Run 'lifty templates %s' for information about the newly installed templates. \n".format(name) +
+    "\n" +
+    "Happy hacking." +
+    "\n"
   }
 }
 
