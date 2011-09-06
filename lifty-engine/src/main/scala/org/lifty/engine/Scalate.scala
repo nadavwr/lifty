@@ -34,6 +34,12 @@ object Scalate {
       println("Wasn't able to inject " + templateInjection)
     }
     
+    for {
+      folders <- env.template.folders
+      path <- folders
+      f = replaceVariables(path, env) |> properPath |> file
+    } f.mkdirs()
+    
     "Done."
   }
   
