@@ -16,4 +16,4 @@ libraryDependencies += "org.scalaz" %% "scalaz-core" % "6.0.1"
 
 libraryDependencies += "jline" % "jline" % "0.9.94"
 
-libraryDependencies += "org.fusesource.scalate" % "scalate-core" % "1.5.1"
+libraryDependencies += "org.fusesource.scalate" % "scalate-core" % "1.4.1"
