@@ -1,6 +1,6 @@
 sbtPlugin := true
 
-version := "1.7"
+version := "1.7-RC0"
 
 name := "lifty"
 

@@ -1,4 +1,4 @@
-version := "0.7"
+version := "0.7-RC0"
 
 name := "lifty-engine"
 
