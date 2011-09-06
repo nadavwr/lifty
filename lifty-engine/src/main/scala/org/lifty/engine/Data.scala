@@ -54,6 +54,7 @@ case class Template(
   name:           String,
   description:    String,
   notice:         Option[String],
+  folders:        Option[List[String]],
   arguments:      List[Argument],
   files:          List[TemplateFile],
   injections:     List[TemplateInjection],

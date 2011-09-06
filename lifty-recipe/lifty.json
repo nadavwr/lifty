@@ -209,6 +209,19 @@
         },
         {   "name"          : "project-blank",
             "description"   : "Creates a blank Lift project that uses SBT as it's build system",
+            "folders"       : [
+              "src/main/resources/props",
+              "src/main/scala/bootstrap/liftweb",
+              "src/main/scala/${PACKAGE}/comet",
+              "src/main/scala/${PACKAGE}/lib",
+              "src/main/scala/${PACKAGE}/model",
+              "src/main/scala/${PACKAGE}/snippet",
+              "src/main/scala/${PACKAGE}/view",
+              "src/main/webapp/images",
+              "src/main/webapp/templates-hidden",
+              "src/main/webapp/static",
+              "src/main/webapp/WEB-INF"
+            ],
             "arguments"     : [
                 {   "name"          :   "liftversion",
                     "default"       :   "2.4-M3" },
