@@ -14,11 +14,11 @@ object Lifty extends Plugin {
     Command.args("lifty","<help>") { (state, args) =>
       LiftyInstance.run(args.toList).fold(
         e => {
-          println(e.message)
+          println("\n" + e.message + "\n")
           state.fail
         },
         s => {
-          println(s)
+          println("\n"+s+"\n")
           state
         }
       )
