@@ -36,11 +36,10 @@ trait Lifty extends InputParser {
     command match {
       
       case RecipesCommand => {
-        ("" ::
+        (
         "The following recipes are installed: " :: 
         "" ::
-        storageComponent.allRecipes.unsafePerformIO.map(_.name).mkString("\n") ::
-        "" :: Nil).mkString("\n").success
+        storageComponent.allRecipes.unsafePerformIO.map(_.name).mkString("\n") :: Nil).mkString("\n").success
       }
 
       case LearnCommand => {        
@@ -57,9 +56,15 @@ trait Lifty extends InputParser {
       case TemplatesCommand => {
         args.headOption.map { name => 
           descriptionOfRecipe(name).flatMap { description => 
+            
+            val max = description.templates.map(_.name.length).max
+            
             (for {
               template <- description.templates
-              output = "%s\n%s".format(template.name, template.arguments.map("  " + _.name).mkString("\n"))
+              output = "%s%s%s".format(
+                template.name, 
+                (0 to (max - template.name.length + 3)).map( _ => " ").mkString, // 3 for extra spacing
+                template.description)
             } yield output).mkString("\n").success
           }
         } getOrElse( Error("You have to supply the name of the recipe").fail ) 
@@ -67,15 +72,13 @@ trait Lifty extends InputParser {
 
       case HelpCommand =>
         (
-        "" ::
         "help                         Shows this message" ::
         "create <recipe> <template>   Create a template from the given recipe" ::
         "templates <recipe>           List all the templates defined by the recipe" ::
         "learn <name> <url>           Learn the recipe at the given URL and store it locally under the given name" ::
         "remove <name>                Deletes a recipe. " ::
         "recipes                      Lists all installed recipes" ::
-        "update <recipe>              Update the recipe if a new version exists" ::
-        "" :: Nil).mkString("\n").success
+        "update <recipe>              Update the recipe if a new version exists" :: Nil).mkString("\n").success
 
       case CreateCommand => {
         args.headOption.map { name => 
@@ -120,7 +123,7 @@ trait Lifty extends InputParser {
         args.headOption.map { recipeName => 
           HomeStorage.deleteRecipe(recipeName).unsafePerformIO.fold(
             (e) => e.fail,
-            (s) => s.success
+            (s) => (s).success
           )
         } getOrElse( Error("You have to supply the name of the recipe. ").fail )
       }
@@ -137,13 +140,11 @@ trait Lifty extends InputParser {
   }
   
   def learnMsg(name: String, url: String, recipe: Recipe) = {
-    "\n"+
     "Lifty successfully installed recipe with %s. \n".format(name) +
     "\n"+
     "Run 'lifty templates %s' for information about the newly installed templates. \n".format(name) +
     "\n" +
-    "Happy hacking." +
-    "\n"
+    "Happy hacking." 
   }
 }
 
