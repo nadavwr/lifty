@@ -27,8 +27,6 @@ object GlobalDefaults {
     
     str match {
       case Pattern("PACKAGE",rest)       => f(searchForMainPackage(), rest)
-      case Pattern("SCALA_VERSION",rest) => f(searchForScalaVersion(), rest)
-      case Pattern("PROJECT_NAME",rest)  => f(searchForProjectName(), rest)
       case _                             => str
     }
   }

@@ -225,12 +225,10 @@
             "arguments"     : [
                 {   "name"          :   "liftversion",
                     "default"       :   "2.4-M3" },
-                {   "name"          :   "mainpack",
-                    "default"       :   "${PACKAGE}" },
-                {   "name"          :   "projectName",
-                    "default"       :   "${PROJECT_NAME}" },
+                {   "name"          :   "mainpack"},
+                {   "name"          :   "projectName" },
                 {   "name"          :   "scalaVersion",
-                    "default"       :   "${SCALA_VERSION}" }
+                    "default"       :   "2.9.1" }
             ],
             "files"         : [
                 {   "file"          : "main_build.ssp",
