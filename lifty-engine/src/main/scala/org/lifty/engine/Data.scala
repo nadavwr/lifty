@@ -39,6 +39,14 @@ case class Description(
     (directArguments ::: transitive).distinct
   }
   
+  def allFolders(template: Template): List[String] = {
+    
+    val thisFolders = template.folders.getOrElse( List[String]() )
+    val other = dependenciesOfTemplate(template).flatMap( _.folders ).flatten
+    
+    (thisFolders ::: other).distinct
+  }
+  
   /** 
    * Get the dependencies (also the transitive ones) of a Template
    */

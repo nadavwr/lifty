@@ -45,8 +45,7 @@ object Scalate {
     }
     
     for {
-      folders <- env.template.folders
-      path <- folders
+      path <- description.allFolders(env.template)
       f = replaceVariables(path, env) |> properPath |> file
     } f.mkdirs()
     
