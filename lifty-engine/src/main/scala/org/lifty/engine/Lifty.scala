@@ -19,6 +19,9 @@ trait Lifty extends InputParser {
   // The storage component. Used to store/read recipes 
   val storageComponent: Storage
 
+  // Given by SBT when being run as a plugin.
+  val classpath: Option[String]
+
   // This main method of interest. This takes a list of arguments and
   // executes the appropriate actions - if the input is valid it will
   // return a string describing what it created - otherwise an error
@@ -86,7 +89,7 @@ trait Lifty extends InputParser {
             parseTemplate(description, args.tail).flatMap { tuple => 
               val (template,rest) = tuple
               parseArguments(name, template, description).flatMap { env => 
-                Scalate.run(env, description).success
+                Scalate.run(env, description, classpath).success
               }
             }
           }
@@ -153,12 +156,12 @@ object LiftyTestInstance extends Lifty {
 
   val inputComponent = EmulatedInputReaderComponent
   val storageComponent = HomeStorage
-
+  val classpath = None
 }
 
 // A specific configuration of Lifty which is used when running the 'real' 
 // application.
-object LiftyInstance extends Lifty {
+class LiftyInstance(val classpath: Option[String]) extends Lifty {
 
   val inputComponent = InputReaderComponent
   val storageComponent = HomeStorage

@@ -10,7 +10,17 @@ object Scalate {
   import Functional._
   import Util.{ properPath, packageAsPath }
 
-  def run(env: Environment, description: Description): String = {
+  def run(env: Environment, description: Description, classpath: Option[String]): String = {
+    
+    val engine = {
+      val e = new TemplateEngine()
+      e.allowCaching = false 
+      classpath.foreach { cp => 
+        println("Setting classpath to " + cp)
+        e.classpath = cp 
+      }
+      e
+    }
     
     val isRenderable = (file: TemplateFile) => file.file.endsWith(".ssp") // TODO: add support for other template languages
     
@@ -22,7 +32,7 @@ object Scalate {
     // toRender.map ( processTemplate )
     toRender.foreach { file => 
       println("Rendering: " + file.file)
-      processTemplate(file,env, description) 
+      processTemplate(file,env, description, engine) 
     }
     
     toCopy.foreach { file => 
@@ -65,7 +75,10 @@ object Scalate {
    * @param template  The TemplateFile to process
    * @param env       The environment in which the template was invoked (i.e. CLI arguments etc.)
    */
-  private def processTemplate(template: TemplateFile, env: Environment, description: Description): (TemplateFile, Boolean) = {
+  private def processTemplate(template: TemplateFile, 
+                              env: Environment, 
+                              description: Description,
+                              engine: TemplateEngine): (TemplateFile, Boolean) = {
     
     HomeStorage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
       val destination = replaceVariables(template.destination, env) |> properPath |> file 
@@ -74,7 +87,7 @@ object Scalate {
         templateStr <- readToString(templateFile).unsafePerformIO
         injectedStr <- Some(inject(templateStr, template, env, description))
         tempFile    <- writeToTempFile(injectedStr)
-        renderedStr <- Some(render(tempFile, env))
+        renderedStr <- Some(render(tempFile, env, engine))
         result      <- writeToFile(renderedStr, destination)
       } yield (template, true) 
       
@@ -162,22 +175,12 @@ object Scalate {
     }
   }
   
-  private def render(file: File, env: Environment): String = {
+  private def render(file: File, env: Environment, engine: TemplateEngine): String = {
     val buffer  = new StringWriter()
     val context = new DefaultRenderContext("",engine, new PrintWriter(buffer))
     addArgumentsToContext(context, env)
     engine.load(file).render(context) // this writes to the buffer
     buffer.toString
   }
-  
-  /*
-   * The engine used to process the Scalate templates. 
-   */
-  private val engine = {
-    val e = new TemplateEngine()
-    e.allowCaching = false 
-    e
-  }
-
 
 }

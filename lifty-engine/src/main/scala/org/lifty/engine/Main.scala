@@ -10,8 +10,7 @@ import Scalaz._
 object Main {
 
   def main(args: Array[String]): Unit = {
-
-    LiftyInstance.run(args.toList).fold(
+    new LiftyInstance(None).run(args.toList).fold(
       e => println(e.message),
       s => println(s)
     )
