@@ -15,7 +15,16 @@ object Lifty extends Plugin {
      
     val scalaCompilerPath = state.configuration.provider.scalaProvider.compilerJar.getPath
     val scalaLibraryPath = state.configuration.provider.scalaProvider.libraryJar.getPath
-    val scalatePath = "/Users/Mads/.ivy2/cache/org.fusesource.scalate/scalate-core/bundles/scalate-core-1.4.1.jar"
+    val scalatePath = List(
+      System.getProperty("user.home"),
+      ".ivy2",
+      "cache",
+      "org.fusesource.scalate",
+      "scalate-core",
+      "bundles",
+      "scalate-core-1.4.1.jar"
+    ).mkString(File.separator)
+    
       
     val cp = (scalaLibraryPath :: scalaCompilerPath :: scalatePath :: Nil).mkString(File.pathSeparator)
       
