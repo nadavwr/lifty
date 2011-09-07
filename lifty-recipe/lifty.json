@@ -108,7 +108,7 @@
             "arguments"     : [
                 {   "name"          :   "snippetName" },
                 {   "name"          :   "snippetpack",
-                    "default"       :   "${PACKAGE}.snippet"}
+                    "default"       :   "${mainpack}.snippet"}
             ],
             "files"         : [
                 {   "file"          : "snippet.ssp",
@@ -122,7 +122,7 @@
             "arguments"     : [
                 {   "name"          :   "modelName" },
                 {   "name"          :   "modelpack",
-                    "default"       :   "${PACKAGE}.model"    
+                    "default"       :   "${mainpack}.model"    
                 }
             ],
             "files"         : [
@@ -137,7 +137,7 @@
             "arguments"     : [
                 {   "name"          :   "cometName" },
                 {   "name"          :   "cometpack",
-                    "default"       :   "${PACKAGE}.comet"
+                    "default"       :   "${mainpack}.comet"
                     
                 }
             ],
@@ -164,7 +164,7 @@
             "description"   : "Template for a model class implemented using Mapper. It provides basic functionality that would expect from a User",
             "arguments"     : [
                 {   "name"          :   "modelpack",
-                    "default"       :   "${PACKAGE}.model"    
+                    "default"       :   "${mainpack}.model"    
                 }
             ],
             "files"         : [
@@ -199,7 +199,7 @@
             "description"   : "I really don't know what this is used for, Tim? David?",
             "arguments"     : [
                 {   "name"          :   "libpack",
-                    "default"       :   "${PACKAGE}.lib" }
+                    "default"       :   "${mainpack}.lib" }
             ],
             "files"         : [
                 {   "file"          : "dependencyFactory.ssp",
@@ -261,8 +261,7 @@
             "arguments"     : [
                 {   "name"          :   "liftversion",
                     "default"       :   "2.4-M3" },
-                {   "name"          :   "mainpack",
-                    "default"       :   "${PACKAGE}" }
+                {   "name"          :   "mainpack" }
             ],
             "files"         : [
                 {   "file"          : "index-static.html",

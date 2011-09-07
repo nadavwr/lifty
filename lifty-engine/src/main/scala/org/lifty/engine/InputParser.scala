@@ -48,17 +48,32 @@ trait InputParser {
    * Will request values for each for the arguments of the template and dependent templates. 
    */
   def parseArguments(recipe: String, template: Template, description: Description): Validation[Error, Environment] = {
-
+    
+    val Pattern = """\$\{(.*)\}(.*)""".r
+    
     // request input for an argument that is missing
-    val requestInputForMissingArgument = (argument: Argument) => {
-      val default = argument.default.map(GlobalDefaults.replace(_)).getOrElse("")
+    val requestInputForMissingArgument = (previous: Map[String,String], argument: Argument) => {
+      // see if there's a previous value to replace
+      val default = argument.default.map{ dflt => 
+        
+        (for { matched <- Pattern.findFirstMatchIn(dflt)
+              name = matched.group(1)
+              rest = matched.group(2)
+              tobe <- previous.get(name) 
+            } yield tobe+rest) getOrElse dflt
+        
+        
+      }.getOrElse("")
       val value = this.inputComponent
                       .requestInput("Enter value for %s%s: ".format(argument.name, argument.default.map(_=>"["+default+"]").getOrElse("")),default)
-                      .unsafePerformIO // TODO: Performing IO
-      (argument.name, value) // TODO: This is a side-effect. IO-Monad?
+                      .unsafePerformIO 
+      (argument.name, value) 
     }
     
-    val kvs = description.allArguments(template).map(requestInputForMissingArgument(_))
+    val kvs = description.allArguments(template).foldLeft(Nil: List[(String,String)]) { (xs,c) =>
+      requestInputForMissingArgument(Map(xs: _*), c) :: xs
+    }
+    
     Environment(recipe, template, Map(kvs: _*)).success
 
   }
