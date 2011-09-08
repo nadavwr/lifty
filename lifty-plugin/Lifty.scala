@@ -29,9 +29,18 @@ object Lifty extends Plugin {
         "org.fusesource.scalate",
         "scalate-core",
         "bundles",
-        "scalate-core-1.4.1.jar"
+        "scalate-core-1.6.0-SNAPSHOT.jar"
       ).mkString(File.separator))
-      (scalaLibraryPath :: scalaCompilerPath :: scalatePath :: Nil)
+      val scalateUtilPath = new java.io.File(List(
+        System.getProperty("user.home"),
+        ".ivy2",
+        "cache",
+        "org.fusesource.scalate",
+        "scalate-util",
+        "bundles",
+        "scalate-util-1.6.0-SNAPSHOT.jar"
+      ).mkString(File.separator))
+      (scalaLibraryPath :: scalaCompilerPath :: scalatePath :: scalateUtilPath :: Nil)
     }
     
     //  SBTCompiler
