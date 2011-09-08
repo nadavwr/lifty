@@ -67,7 +67,7 @@ object Lifty extends Plugin {
         
         compiler.apply(sources = List(file),
                        classpath = cp,
-                       outputDirectory = new java.io.File(List(System.getProperty("user.home"),".lifty_workspace").mkString(File.separator)),
+                       outputDirectory = new java.io.File(List(System.getProperty("user.home"),".lifty_workspace","classes").mkString(File.separator)),
                        options = Nil)
       }
     }
