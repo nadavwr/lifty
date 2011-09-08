@@ -17,6 +17,11 @@ object Lifty extends Plugin {
 
   lazy val liftyCommand = Command.args("lifty","<help>") { (state, args) =>
     
+    val bytecodeDir = 
+      new java.io.File(List(System.getProperty("user.home"),".lifty_workspace","classes").mkString(File.separator))
+    
+    bytecodeDir.mkdirs() 
+    
     // classpath
     
     val cp = {
@@ -67,7 +72,7 @@ object Lifty extends Plugin {
         
         compiler.apply(sources = List(file),
                        classpath = cp,
-                       outputDirectory = new java.io.File(List(System.getProperty("user.home"),".lifty_workspace","classes").mkString(File.separator)),
+                       outputDirectory = bytecodeDir,
                        options = Nil)
       }
     }
@@ -76,12 +81,13 @@ object Lifty extends Plugin {
       override protected def createCompiler: Compiler = {
         new SBTCompiler()
       }
+      override def bytecodeDirectory = bytecodeDir
     } 
      
     // create the special engine. 
     val engine = new SBTTemplateEngine()
     engine.allowCaching = false 
-    engine.workingDirectory = new java.io.File(List(System.getProperty("user.home"),".lifty_workspace").mkString(File.separator))   
+    
     
     // Run the lifty instance.    
     new LiftyInstance(Some(engine)).run(args.toList).fold(
