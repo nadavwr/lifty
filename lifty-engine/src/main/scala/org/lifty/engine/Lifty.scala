@@ -5,6 +5,7 @@ import java.net.{ URL, URI }
 import scalaz._
 import scalaz.effects._
 import Scalaz._
+import org.fusesource.scalate.{ TemplateEngine }
 
 trait Lifty extends InputParser {
 
@@ -20,7 +21,7 @@ trait Lifty extends InputParser {
   val storageComponent: Storage
 
   // Given by SBT when being run as a plugin.
-  val classpath: Option[String]
+  val engine: Option[TemplateEngine]
 
   // This main method of interest. This takes a list of arguments and
   // executes the appropriate actions - if the input is valid it will
@@ -89,7 +90,7 @@ trait Lifty extends InputParser {
             parseTemplate(description, args.tail).flatMap { tuple => 
               val (template,rest) = tuple
               parseArguments(name, template, description).flatMap { env => 
-                Scalate.run(env, description, classpath).success
+                Scalate.run(env, description, engine).success
               }
             }
           }
@@ -156,12 +157,12 @@ object LiftyTestInstance extends Lifty {
 
   val inputComponent = EmulatedInputReaderComponent
   val storageComponent = HomeStorage
-  val classpath = None
+  val engine = None
 }
 
 // A specific configuration of Lifty which is used when running the 'real' 
 // application.
-class LiftyInstance(val classpath: Option[String]) extends Lifty {
+class LiftyInstance(val engine: Option[TemplateEngine]) extends Lifty {
 
   val inputComponent = InputReaderComponent
   val storageComponent = HomeStorage

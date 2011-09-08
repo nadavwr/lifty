@@ -10,15 +10,11 @@ object Scalate {
   import Functional._
   import Util.{ properPath, packageAsPath }
 
-  def run(env: Environment, description: Description, classpath: Option[String]): String = {
+  def run(env: Environment, description: Description, e: Option[TemplateEngine]): String = {
     
-    val engine = {
+    val engine = e.getOrElse {
       val e = new TemplateEngine()
       e.allowCaching = false 
-      classpath.foreach { cp => 
-        println("Setting classpath to " + cp)
-        e.classpath = cp 
-      }
       e
     }
     
