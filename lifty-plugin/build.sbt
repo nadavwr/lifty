@@ -8,6 +8,4 @@ organization := "org.lifty"
 
 scalaVersion := "2.8.1"
 
-libraryDependencies += "org.fusesource.scalate" % "scalate-core" % "1.6.0-SNAPSHOT"
-
-resolvers += "Local Maven Repository" at "file://"+Path.userHome+"/.m2/repository"
+libraryDependencies += "org.fusesource.scalate" % "scalate-core" % "1.5.2-scala_2.8.1"
