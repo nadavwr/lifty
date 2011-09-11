@@ -225,7 +225,7 @@
             ],
             "arguments"     : [
                 {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M3" },
+                    "default"       :   "2.4-M4" },
                 {   "name"          :   "mainpack"},
                 {   "name"          :   "projectName" },
                 {   "name"          :   "scalaVersion",
@@ -253,7 +253,9 @@
                 {   "file"          : "boot.ssp",
                     "destination"   : "src/main/scala/bootstrap/liftweb/Boot.scala"},
                 {   "file"          : "AppTest.ssp",
-                    "destination"   : "src/test/scala/${mainpack}/AppTest.scala"}
+                    "destination"   : "src/test/scala/${mainpack}/AppTest.scala"},
+                {   "file"          : "web.xml",
+                    "destination"   : "src/main/webapp/WEB-INF/web.xml"}
             ]
         },
         {   "name"          : "project",
@@ -261,7 +263,7 @@
             "dependencies"  : ["project-blank", "user", "dependencyFactory"],
             "arguments"     : [
                 {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M3" },
+                    "default"       :   "2.4-M4" },
                 {   "name"          :   "mainpack" }
             ],
             "files"         : [
