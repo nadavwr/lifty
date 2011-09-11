@@ -106,6 +106,7 @@
         {   "name"          : "snippet",
             "description"   : "creates a snippet",
             "arguments"     : [
+                {   "name"          :   "mainpack"},
                 {   "name"          :   "snippetName" },
                 {   "name"          :   "snippetpack",
                     "default"       :   "${mainpack}.snippet"}
@@ -120,6 +121,7 @@
             "description"   : "Creates a model class using Mapper",
             "notice"        : "Remember to add ${modelName} to the Schemifier in your boot.scala file",
             "arguments"     : [
+                {   "name"          :   "mainpack"},
                 {   "name"          :   "modelName" },
                 {   "name"          :   "modelpack",
                     "default"       :   "${mainpack}.model"    
