@@ -164,6 +164,8 @@
         {   "name"          : "user",
             "description"   : "Template for a model class implemented using Mapper. It provides basic functionality that would expect from a User",
             "arguments"     : [
+                {   "name"          :   "liftversion",
+                    "default"       :   "2.4-M4"  },
                 {   "name"          :   "mainpack"},
                 {   "name"          :   "modelpack",
                     "default"       :   "${mainpack}.model"    
