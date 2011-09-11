@@ -144,7 +144,7 @@ trait Lifty extends InputParser {
   }
   
   def learnMsg(name: String, url: String, recipe: Recipe) = {
-    "Lifty successfully installed recipe with %s. \n".format(name) +
+    "Lifty successfully installed recipe with name '%s'. \n".format(name) +
     "\n"+
     "Run 'lifty templates %s' for information about the newly installed templates. \n".format(name) +
     "\n" +
