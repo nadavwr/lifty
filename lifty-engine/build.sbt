@@ -1,10 +1,14 @@
-version := "0.7-RC0-LOCAL"
+version := "0.7-BETA"
 
 name := "lifty-engine"
 
 organization := "org.lifty"
 
 scalaVersion := "2.8.1"
+
+publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/")
+
+credentials += Credentials(Path.userHome / "dev" / ".nexus_credentials")
 
 resolvers += "Scala Tools Releases" at "http://scala-tools.org/repo-releases/"
 
