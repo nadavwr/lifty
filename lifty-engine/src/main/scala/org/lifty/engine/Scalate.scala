@@ -1,7 +1,7 @@
 package org.lifty.engine
 
 import java.io.{ File, StringWriter, PrintWriter }
-import org.lifty.engine.io.{ HomeStorage }
+import org.lifty.engine.io.{ HomeStorage, FileUtil }
 import org.fusesource.scalate.{ TemplateEngine, DefaultRenderContext }
 
 object Scalate {
@@ -37,7 +37,18 @@ object Scalate {
     }
     
     invalidInjections(env.template, description).foreach { templateInjection => 
-      println("Wasn't able to inject " + templateInjection)
+      for {
+        txtFile     <- HomeStorage.template(env.recipe, templateInjection.file).unsafePerformIO
+        contents    <- FileUtil.readToString(txtFile).unsafePerformIO
+        tempFile    <- writeToTempFile(contents)
+        renderedStr <- Some(render(tempFile, env, engine))
+      } {
+        println("\nWasn't able to inject\n\n%s\n\ninto %s at %s ".format(
+          renderedStr,
+          templateInjection.into,
+          templateInjection.point
+        ))
+      }
     }
     
     for {
@@ -75,18 +86,26 @@ object Scalate {
                               description: Description,
                               engine: TemplateEngine): (TemplateFile, Boolean) = {
     
+    val destination = replaceVariables(template.destination, env) |> properPath |> file 
+    (for {
+      renderedStr <- processTemplateInMemory(template, env, description, engine)
+      result      <- writeToFile(renderedStr, destination)
+    } yield (template, true) ).getOrElse(template,false)
+  }
+  
+  private def processTemplateInMemory(template: TemplateFile, 
+                                      env: Environment, 
+                                      description: Description,
+                                      engine: TemplateEngine): Option[String] = {
+                                        
     HomeStorage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
-      val destination = replaceVariables(template.destination, env) |> properPath |> file 
-            
       for {
         templateStr <- readToString(templateFile).unsafePerformIO
         injectedStr <- Some(inject(templateStr, template, env, description))
         tempFile    <- writeToTempFile(injectedStr)
         renderedStr <- Some(render(tempFile, env, engine))
-        result      <- writeToFile(renderedStr, destination)
-      } yield (template, true) 
-      
-    } getOrElse (template, false) 
+      } yield Some(renderedStr)
+    } getOrElse None
   }
   
   /*
