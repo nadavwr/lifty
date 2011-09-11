@@ -135,6 +135,7 @@
             "description"   : "Creates a comet component",
             "notice"        : "Add <lift:comet type='${cometName}' /> in a template file to use the comet component",
             "arguments"     : [
+                {   "name"          :   "mainpack"},
                 {   "name"          :   "cometName" },
                 {   "name"          :   "cometpack",
                     "default"       :   "${mainpack}.comet"
@@ -163,6 +164,7 @@
         {   "name"          : "user",
             "description"   : "Template for a model class implemented using Mapper. It provides basic functionality that would expect from a User",
             "arguments"     : [
+                {   "name"          :   "mainpack"},
                 {   "name"          :   "modelpack",
                     "default"       :   "${mainpack}.model"    
                 }
@@ -198,6 +200,7 @@
         {   "name"          : "dependencyFactory",
             "description"   : "I really don't know what this is used for, Tim? David?",
             "arguments"     : [
+                {   "name"          :   "mainpack"},
                 {   "name"          :   "libpack",
                     "default"       :   "${mainpack}.lib" }
             ],
