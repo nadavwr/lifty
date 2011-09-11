@@ -1,3 +1,4 @@
+<%@ var liftversion:String %>
 
 libraryDependencies += "net.liftweb" %% "lift-mapper" % "${liftversion}" % "compile->default"
  
