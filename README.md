@@ -10,10 +10,11 @@ Please help me by trying out the beta. To do so try the following.
 - Create a global plugin .sbt file: ~/.sbt/plugins/build.sbt
 - Add the following to that file: libraryDependencies += "org.lifty" % "lifty_2.8.1" % "1.7-BETA"
 - Create a new SBT project using SBT 10.1 
-- run "lifty learn lift https://raw.github.com/Lifty/Lifty-engine/master/lifty-recipe/lifty.json"
-- run "lifty create lift project"
-- run "reload"
-- run "jetty-run" 
+- In the SBT console 
+    - > lifty learn lift https://raw.github.com/Lifty/Lifty-engine/master/lifty-recipe/lifty.json
+    - > lifty create lift project
+    - > reload
+    - > jetty-run
 - ...
 - profit
 
