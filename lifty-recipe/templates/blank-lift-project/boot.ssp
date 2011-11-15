@@ -18,9 +18,9 @@ class Boot {
     LiftRules.addToPackages("${mainpack}")
 
     // build sitemap
-    val entries = List(Menu("Home") / "index") :::
+    val entries = (List(Menu("Home") / "index") :::
                   //#inject point: sitemap
-                  Nil
+                  Nil)
     
     LiftRules.uriNotFound.prepend(NamedPF("404handler"){
       case (req,failure) => NotFoundAsTemplate(

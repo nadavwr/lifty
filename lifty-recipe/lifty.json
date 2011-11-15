@@ -167,7 +167,7 @@
             "description"   : "Template for a model class implemented using Mapper. It provides basic functionality that would expect from a User",
             "arguments"     : [
                 {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M4"  },
+                    "default"       :   "2.4-M5"  },
                 {   "name"          :   "mainpack"},
                 {   "name"          :   "modelpack",
                     "default"       :   "${mainpack}.model"    
@@ -232,7 +232,7 @@
             ],
             "arguments"     : [
                 {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M4" },
+                    "default"       :   "2.4-M5" },
                 {   "name"          :   "mainpack"},
                 {   "name"          :   "projectName" },
                 {   "name"          :   "scalaVersion",
@@ -270,7 +270,7 @@
             "dependencies"  : ["project-blank", "user", "dependencyFactory"],
             "arguments"     : [
                 {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M4" },
+                    "default"       :   "2.4-M5" },
                 {   "name"          :   "mainpack" }
             ],
             "files"         : [

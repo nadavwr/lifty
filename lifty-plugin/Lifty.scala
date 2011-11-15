@@ -60,11 +60,12 @@ object Lifty extends Plugin {
       def compile(file: File): Unit = {
         
         val scalaProvider = state.configuration.provider.scalaProvider
-        val scalaInstance = new ScalaInstance(scalaProvider.version, 
-                                              scalaProvider.loader,  
-                                              scalaProvider.libraryJar, 
-                                              scalaProvider.compilerJar, 
-                                              scalaProvider.jars)
+        val scalaInstance = new ScalaInstance(version = scalaProvider.version, 
+                                              explicitActual = None, /* not sure if this is correct.*/
+                                              libraryJar = scalaProvider.libraryJar, 
+                                              compilerJar = scalaProvider.compilerJar, 
+                                              loader = scalaProvider.loader,
+                                              extraJars = scalaProvider.jars)
 
         val compiler = new RawCompiler(scalaInstance = scalaInstance, 
                                        cp = cpopts, 
