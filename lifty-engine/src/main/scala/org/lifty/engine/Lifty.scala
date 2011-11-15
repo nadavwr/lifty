@@ -80,7 +80,7 @@ trait Lifty extends InputParser {
         "create <recipe> <template>   Create a template from the given recipe" ::
         "templates <recipe>           List all the templates defined by the recipe" ::
         "learn <name> <url>           Learn the recipe at the given URL and store it locally under the given name" ::
-        "remove <name>                Deletes a recipe. " ::
+        "delete <name>                Deletes a recipe. " ::
         "recipes                      Lists all installed recipes" ::
         "update <recipe>              Update the recipe if a new version exists" :: Nil).mkString("\n").success
 
