@@ -13,3 +13,10 @@ publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/r
 credentials += Credentials(Path.userHome / "dev" / ".nexus_credentials")
 
 libraryDependencies += "org.fusesource.scalate" % "scalate-core" % "1.5.3"
+
+pomPostProcess := {
+    import xml._
+    Rewrite.rewriter {
+        case e: Elem if e.label == "classifier" && e.child.mkString == "sources" => NodeSeq.Empty
+    }
+}
