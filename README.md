@@ -14,7 +14,7 @@ Now you have lifty installed. So to create a new Lift project simple do this:
 
 - Create a new SBT project
 - In the SBT console 
-    - > lifty learn lift https://raw.github.com/Lifty/Lifty-engine/master/lifty-recipe/lifty.json
+    - > lifty learn lift https://raw.github.com/Lifty/lifty/master/lifty-recipe/lifty.json
     - > lifty create lift project
     - > reload
     - > container:start
