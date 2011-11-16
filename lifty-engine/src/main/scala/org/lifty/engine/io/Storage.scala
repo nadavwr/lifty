@@ -34,7 +34,13 @@ trait Storage {
 
   val root: File
 
-  lazy val storage = file(root.getAbsolutePath + / + ".lifty") // TODO: Create it if it doesn't exist
+  lazy val storage = {
+    val f = file(root.getAbsolutePath + / + ".lifty") 
+    if (!f.exists()) {
+      f.mkdirs()
+    }
+    f
+  }
 
   /*
    *
