@@ -1,24 +1,24 @@
 Lifty 1.7
 =========
 
-Beta
----------
+Getting started
+---------------
 
-Please help me by trying out the beta. To do so try the following.
+Simply follow these steps
 
-- Install SBT 11.x  
+- Install SBT 0.11.1 (or any in the 0.11.x series)  
 - Create a global plugin .sbt file: ~/.sbt/plugins/build.sbt
 - Add the following to that file: addSbtPlugin("org.lifty" % "lifty" % "1.7")
+
+Now you have lifty installed. So to create a new Lift project simple do this: 
+
 - Create a new SBT project
 - In the SBT console 
     - > lifty learn lift https://raw.github.com/Lifty/Lifty-engine/master/lifty-recipe/lifty.json
     - > lifty create lift project
     - > reload
     - > container:start
-    - ... play around a bit 
     - > container:stop
-- ...
-- profit
 
 About 1.7
 -----------
