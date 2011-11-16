@@ -8,7 +8,7 @@ Simply follow these steps
 
 - Install SBT 0.11.1 (or any in the 0.11.x series)  
 - Create a global plugin .sbt file: ~/.sbt/plugins/build.sbt
-- Add the following to that file: addSbtPlugin("org.lifty" % "lifty" % "1.7")
+- Add the following to that file: addSbtPlugin("org.lifty" % "lifty" % "1.7.1")
 
 Now you have lifty installed. So to create a new Lift project simple do this: 
 
