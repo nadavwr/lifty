@@ -34,7 +34,7 @@ object Lifty extends Plugin {
         "org.fusesource.scalate",
         "scalate-core",
         "bundles",
-        "scalate-core-1.6.0-SNAPSHOT.jar"
+        "scalate-core-1.5.3.jar"
       ).mkString(File.separator))
       val scalateUtilPath = new java.io.File(List(
         System.getProperty("user.home"),
@@ -43,7 +43,7 @@ object Lifty extends Plugin {
         "org.fusesource.scalate",
         "scalate-util",
         "bundles",
-        "scalate-util-1.6.0-SNAPSHOT.jar"
+        "scalate-util-1.5.3.jar"
       ).mkString(File.separator))
       (scalaLibraryPath :: scalaCompilerPath :: scalatePath :: scalateUtilPath :: Nil)
     }
