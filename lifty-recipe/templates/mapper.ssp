@@ -1,6 +1,5 @@
 <%@ var modelName:String %>
 <%@ var modelpack:String %>
-<%@ var fields:List[String] %>
 
 package ${modelpack}
 
