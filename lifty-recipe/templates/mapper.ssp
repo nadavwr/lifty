@@ -10,9 +10,5 @@ class ${modelName} extends LongKeyedMapper[${modelName}] with IdPK {
 
   def getSingleton = ${modelName}
 
-<% fields.foreach{ field => %>
-  object ${field} extends MappedString(this,256)
-<% } %>
-
 }
 object ${modelName} extends ${modelName} with LongKeyedMetaMapper[${modelName}]
