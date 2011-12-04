@@ -19,71 +19,36 @@ import org.fusesource.scalate.support.{ Compiler }
 object Lifty extends Plugin {
 
   import LiftyParsers._
-  
-  // Keys
-  val Lifty     = config("lifty")
-  val create    = InputKey[Unit]("create")
-  val templates = InputKey[Unit]("templates")
-  val learn     = InputKey[Unit]("learn")
-  val delete    = InputKey[Unit]("delete")
-  val upgrade   = InputKey[Unit]("upgrade")
-  val recipes   = TaskKey[Unit]("recipes")
-  val help      = TaskKey[Unit]("help")
 
-  val liftySettings: Seq[sbt.Project.Setting[_]] = {
-    inConfig(Lifty)(Seq(
-      recipes   := recipesTask,
-      help      := helpTask,
-      create    := InputTask.static(createParser)(createDef),
-      templates := InputTask.static(templatesParser)(templatesDef),
-      learn     := InputTask.static(learnParser)(learnDef),
-      delete    := InputTask.static(deleteParser)(deleteDef),
-      upgrade   := InputTask.static(upgradeParser)(upgradeDef)
-    ))
+  override lazy val settings = Seq(commands += liftyCommand)
+
+  val liftyCommand = Command("lifty")(_ => liftyParser) {
+    (state: State, p: (String,List[String])) => {
+      liftyDef(p)
+      state
+    }
   }
 
-  // TODO: Surely there's a better way than this. 
-  def tsk(f: () => Unit) = {
-    Task(
-      Info(AttributeMap.empty, (x:Unit) => AttributeMap.empty),
-      Pure { () => f() }
-    )
-  }
+  val liftyDef = (p: (String, List[String])) => { p match {
+    case (cmd: String, args: List[String]) => {
+      cmd match {
+        case "create"    => println(cmd + args)
+        case "templates" => println(cmd + args)
+        case "learn"     => println(cmd + args)
+        case "delete"    => println(cmd + args)
+        case "upgrade"   => println(cmd + args)
+        case "recipes"   => println(cmd + args)
+        case "help"      => println(cmd + args)
+        case _ => println("unsupported")
+      }
+    }
+  }}
 
-  def recipesTask {
-    println("Would've listed recipes")
-  }
-
-  def helpTask = {
-    println("Would've printed help msg")
-  }
-
-  val createDef = (p: (String,String)) => p match {
-    case (recipe: String, template: String) =>
-      tsk { () => println("eww") }
-  }
-
-  val templatesDef = (p: String) => p match {
-    case (recipe: String) =>
-      tsk { () => println("Templates of " + recipe) }
-  }
-
-  val learnDef = (p: (String,String)) => p match {
-    case (name: String, url: String) =>
-      tsk { () => println("Would've learned " + name + " as " + url) }
-  }
-  
-  val deleteDef = (p: String) => p match {
-    case (recipe: String) => 
-      tsk { () => println("Would've deleted " + recipe) }
-  }
-  
-  val upgradeDef = (p: String) => p match {
-    case (recipe: String) =>
-      tsk { () => println("Would've updated " + name) }
-  }
-  
   object LiftyParsers {
+
+    val keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
+
+    def listTuple(t: (String,String)): List[String] = List(t._1,t._2)
 
     // Sample data for now.
     val recipes = "lift" :: "sbt" :: Nil
@@ -105,6 +70,19 @@ object Lifty extends Plugin {
     val learnParser    : Parser[(String,String)] = name flatMap url
     val deleteParser   : Parser[String]          = recipe
     val upgradeParser  : Parser[String]          = recipe
+
+    val liftyParser: Parser[(String,List[String])] = {
+      Space ~>
+      NotSpace.examples(keywords : _ *) ~ (
+        ( Space ~>
+          (createParser map (listTuple _)) |
+          (templatesParser map (List(_)))  |
+          (learnParser map (listTuple _))  |
+          (deleteParser map (List(_)))     |
+          (upgradeParser map (List(_)))
+        ).??( List[String]() ))
+    }
+
   }
-  
+
 }
