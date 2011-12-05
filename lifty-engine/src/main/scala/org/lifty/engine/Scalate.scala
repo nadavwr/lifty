@@ -1,7 +1,7 @@
 package org.lifty.engine
 
 import java.io.{ File, StringWriter, PrintWriter }
-import org.lifty.engine.io.{ HomeStorage, FileUtil }
+import org.lifty.engine.io.{ FileUtil, Storage }
 import org.fusesource.scalate.{ TemplateEngine, DefaultRenderContext }
 
 object Scalate {
@@ -38,7 +38,7 @@ object Scalate {
     
     invalidInjections(env.template, description).foreach { templateInjection => 
       for {
-        txtFile     <- HomeStorage.template(env.recipe, templateInjection.file).unsafePerformIO
+        txtFile     <- Storage.template(env.recipe, templateInjection.file).unsafePerformIO
         contents    <- FileUtil.readToString(txtFile).unsafePerformIO
         tempFile    <- writeToTempFile(contents)
         renderedStr <- Some(render(tempFile, env, engine))
@@ -66,7 +66,7 @@ object Scalate {
    */
 
   private def copyTemplate(template: TemplateFile, env: Environment): (TemplateFile, Boolean) = {
-    HomeStorage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
+    Storage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
       val destination = replaceVariables(template.destination, env) |> properPath |> file
       for {
         templateStr <- readToString(templateFile).unsafePerformIO
@@ -98,7 +98,7 @@ object Scalate {
                                       description: Description,
                                       engine: TemplateEngine): Option[String] = {
                                         
-    HomeStorage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
+    Storage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile => 
       for {
         templateStr <- readToString(templateFile).unsafePerformIO
         injectedStr <- Some(inject(templateStr, template, env, description))
@@ -125,7 +125,7 @@ object Scalate {
       if (!regxp.findFirstIn(line).isEmpty) {
         val point = regxp.findFirstMatchIn(line).get.group(1)
         injectionsForPointInFile(point, templateFile, description, env.template).map { injection => 
-          HomeStorage.template(env.recipe, injection.file).unsafePerformIO.flatMap { injectionFile =>
+          Storage.template(env.recipe, injection.file).unsafePerformIO.flatMap { injectionFile =>
             readToString(injectionFile).unsafePerformIO
           }.getOrElse {
             println("Tried to load " + injection.file + " but failed")

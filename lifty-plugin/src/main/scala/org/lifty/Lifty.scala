@@ -3,18 +3,15 @@ package org.lifty
 import java.net.{ URL }
 import java.io.{ File }
 import org.lifty.engine._
+import org.lifty.engine.io.{ Storage }
+
+import scalaz.effects.IO
 
 import sbt._
 import Keys._
 import Defaults._
-import Project.Initialize
 import complete.DefaultParsers._
 import complete.{ Parser }
-import sbt.compiler.{ RawCompiler }
-import xsbti.{Logger}
-
-import org.fusesource.scalate.{ TemplateEngine }
-import org.fusesource.scalate.support.{ Compiler }
 
 object Lifty extends Plugin {
 
@@ -46,16 +43,15 @@ object Lifty extends Plugin {
 
   object LiftyParsers {
 
-    val keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
-
     def listTuple(t: (String,String)): List[String] = List(t._1,t._2)
 
-    // Sample data for now.
-    val recipes = "lift" :: "sbt" :: Nil
-    val templates = Map(
-      "lift" -> List("project", "project-blank", "snippet", "layout"),
-      "sbt"  -> List("plugin")
-    )
+    // data
+
+    val keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
+    val recipes: List[String] = Storage.allRecipes.unsafePerformIO map (_.name)
+    val templates: Map[String,List[String]] = (recipes map ( r => (r,Storage.templateNames(r).unsafePerformIO.toOption.get))).toMap
+
+    // parsers
 
     val recipe: Parser[String] = Space ~> NotSpace.examples(recipes : _ *) <~ Space
 

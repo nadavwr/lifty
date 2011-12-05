@@ -11,7 +11,7 @@ import scalaz.effects._
 import Scalaz._
 import java.net.{ URL }
 import java.io.{ File }
-import org.lifty.engine.{ Error, Description }
+import org.lifty.engine.{ Error, Description, Template }
 import Downloader.{ download }
 import DescriptionLoader.{ load }
 import org.lifty.engine.io.FileUtil.{ file }
@@ -30,9 +30,9 @@ case class Recipe(name: String, descriptor: File, templates: Seq[File])
       template2.ssp
   </pre>
 */
-trait Storage {
+object Storage {
 
-  val root: File
+  val root = file(System.getProperty("user.home"))
 
   lazy val storage = {
     val f = file(root.getAbsolutePath + / + ".lifty") 
@@ -97,6 +97,16 @@ trait Storage {
            .toList
   }
   
+  /**
+   * Returns a list of all of the names of the templates of the specific recipe.
+   */
+  def templateNames(name: String): IO[Validation[Error,List[String]]] = {
+    recipe(name).map{ i => i.flatMap { r => 
+      DescriptionLoader.load(r.descriptor).unsafePerformIO.map{ description => description.templates.map(_.name )}
+    }}
+  }
+
+
   /** 
    * Deletes a recipe from the store 
    * 
@@ -152,10 +162,4 @@ trait Storage {
         )
     }
   }
-}
-
-object HomeStorage extends Storage {
-
-  val root = file(System.getProperty("user.home"))
-
 }

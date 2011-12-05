@@ -16,9 +16,6 @@ trait Lifty extends InputParser {
 
   // The component to use when requesting input from the user
   val inputComponent: InputComponent
-  
-  // The storage component. Used to store/read recipes 
-  val storageComponent: Storage
 
   // Given by SBT when being run as a plugin.
   val engine: Option[TemplateEngine]
@@ -43,7 +40,7 @@ trait Lifty extends InputParser {
         (
         "The following recipes are installed: " :: 
         "" ::
-        storageComponent.allRecipes.unsafePerformIO.map(_.name).mkString("\n") :: Nil).mkString("\n").success
+        Storage.allRecipes.unsafePerformIO.map(_.name).mkString("\n") :: Nil).mkString("\n").success
       }
 
       case LearnCommand => {        
@@ -51,7 +48,7 @@ trait Lifty extends InputParser {
           name   <- args.headOption
           urlStr <- args.tail.headOption
         } yield {
-          storageComponent.storeRecipe(name, new URL(urlStr)).unsafePerformIO.fold(
+          Storage.storeRecipe(name, new URL(urlStr)).unsafePerformIO.fold(
             error => error.fail,
             recipe => learnMsg(name,urlStr, recipe).success)
         }).getOrElse(Error("You have to supply a name and url for the recipe").fail)
@@ -99,7 +96,7 @@ trait Lifty extends InputParser {
         
       case UpdateTemplatesCommand => {
         args.headOption.map { recipeName => 
-          HomeStorage.recipe(recipeName).unsafePerformIO.fold(
+          Storage.recipe(recipeName).unsafePerformIO.fold(
             (e) => Error("No recipe with that name exists.").fail, 
             (s) => DescriptionLoader.load(s.descriptor).unsafePerformIO.fold(
               (e) => Error("Wasn't able to parse the local .json file. Please uninstall and re-learn the recipe.").fail,
@@ -109,7 +106,7 @@ trait Lifty extends InputParser {
                 DescriptionLoader.load(origin).unsafePerformIO.fold(
                   (e) => e.fail,
                   (s) => if (s.version > version) {
-                    HomeStorage.storeRecipe(recipeName, origin).unsafePerformIO.fold(
+                    Storage.storeRecipe(recipeName, origin).unsafePerformIO.fold(
                       (e) => e.fail,
                       (s) => "Successfully updated the recipe.".format(version).success
                     )
@@ -125,7 +122,7 @@ trait Lifty extends InputParser {
       
       case DeleteCommand => {
         args.headOption.map { recipeName => 
-          HomeStorage.deleteRecipe(recipeName).unsafePerformIO.fold(
+          Storage.deleteRecipe(recipeName).unsafePerformIO.fold(
             (e) => e.fail,
             (s) => (s).success
           )
@@ -138,7 +135,7 @@ trait Lifty extends InputParser {
   }
   
   private def descriptionOfRecipe(recipeName: String): Validation[Error,Description] = {
-    storageComponent.recipe(recipeName).unsafePerformIO.flatMap { recipe => 
+    Storage.recipe(recipeName).unsafePerformIO.flatMap { recipe => 
       DescriptionLoader.load(recipe.descriptor).unsafePerformIO
     } 
   }
@@ -156,7 +153,6 @@ trait Lifty extends InputParser {
 object LiftyTestInstance extends Lifty {
 
   val inputComponent = EmulatedInputReaderComponent
-  val storageComponent = HomeStorage
   val engine = None
 }
 
@@ -165,7 +161,6 @@ object LiftyTestInstance extends Lifty {
 class LiftyInstance(val engine: Option[TemplateEngine]) extends Lifty {
 
   val inputComponent = InputReaderComponent
-  val storageComponent = HomeStorage
 
 }
 
