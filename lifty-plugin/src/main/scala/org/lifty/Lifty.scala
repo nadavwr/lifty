@@ -53,9 +53,9 @@ object Lifty extends Plugin {
 
     // parsers
 
-    val recipe: Parser[String] = Space ~> NotSpace.examples(recipes : _ *) <~ Space
+    val recipe: Parser[String] = token(NotSpace.examples(recipes : _ *) <~ Space)
 
-    val template: String => Parser[(String,String)] = (r) => NotSpace.examples(templates(r) : _ *) map ( t => (r,t) )
+    val template: String => Parser[(String,String)] = (r) => token(NotSpace.examples(templates(r) : _ *) map ( t => (r,t) ))
 
     val name: Parser[String] = Space ~> NotSpace <~ Space
 
@@ -69,14 +69,14 @@ object Lifty extends Plugin {
 
     val liftyParser: Parser[(String,List[String])] = {
       Space ~>
-      NotSpace.examples(keywords : _ *) ~ (
-        ( Space ~>
-          (createParser map (listTuple _)) |
-          (templatesParser map (List(_)))  |
-          (learnParser map (listTuple _))  |
-          (deleteParser map (List(_)))     |
-          (upgradeParser map (List(_)))
-        ).??( List[String]() ))
+      token(NotSpace.examples(keywords : _ *) <~ Space) flatMap { cmd => cmd match {
+        case "create"    => createParser map { p => (cmd,listTuple(p)) }
+        case "templates" => templatesParser map { p => (cmd, List(p)) }
+        case "learn"     => learnParser map { p => (cmd, listTuple(p)) }
+        case "delete"    => deleteParser map { p => (cmd, List(p)) }
+        case "upgrade"   => upgradeParser map { p => (cmd, List(p)) }
+        case _           => success { (cmd,List[String]()) }
+      }}
     }
 
   }
