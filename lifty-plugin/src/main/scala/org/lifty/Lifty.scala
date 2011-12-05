@@ -1,7 +1,5 @@
 package org.lifty
 
-import java.net.{ URL }
-import java.io.{ File }
 import org.lifty.engine._
 import org.lifty.engine.io.{ Storage }
 
@@ -19,27 +17,15 @@ object Lifty extends Plugin {
 
   override lazy val settings = Seq(commands += liftyCommand)
 
-  val liftyCommand = Command("lifty")(_ => liftyParser) {
-    (state: State, p: (String,List[String])) => {
-      liftyDef(p)
-      state
-    }
-  }
+  val liftyCommand = Command("lifty")(_ => liftyParser)(liftyDef _)
 
-  val liftyDef = (p: (String, List[String])) => { p match {
-    case (cmd: String, args: List[String]) => {
-      cmd match {
-        case "create"    => println(cmd + args)
-        case "templates" => println(cmd + args)
-        case "learn"     => println(cmd + args)
-        case "delete"    => println(cmd + args)
-        case "upgrade"   => println(cmd + args)
-        case "recipes"   => println(cmd + args)
-        case "help"      => println(cmd + args)
-        case _ => println("unsupported")
-      }
-    }
-  }}
+  def liftyDef(state: State, p: (String, List[String])) = { 
+    val (cmd: String, args: List[String]) = p
+    LiftyEngine.runCommand(cmd, args).fold(
+      e => { println("\n" + e.message + "\n") ; state.fail },
+      s => { println("\n"+s+"\n") ; state }
+    )
+  }
 
   object LiftyParsers {
 
@@ -53,32 +39,36 @@ object Lifty extends Plugin {
 
     // parsers
 
-    val recipe: Parser[String] = token(NotSpace.examples(recipes : _ *) <~ Space)
+    val recipe: Parser[String] = token(NotSpace.examples(recipes : _ *))
 
-    val template: String => Parser[(String,String)] = (r) => token(NotSpace.examples(templates(r) : _ *) map ( t => (r,t) ))
+    def template(recipe: String): Parser[(String,String)] = {
+      if (templates.contains(recipe)) {
+        token(NotSpace.examples(templates(recipe) : _ *).map( t => (recipe,t) ))
+      } else {
+        failure(recipe + "Lifty doesn't know any recipe named " + recipe)
+      }
+    }
 
-    val name: Parser[String] = Space ~> NotSpace <~ Space
+    val name: Parser[String] = NotSpace
 
     val url: String => Parser[(String,String)] = (n) => NotSpace map ( u => (n,u) )
 
-    val createParser   : Parser[(String,String)] = recipe flatMap template
+    val createParser   : Parser[(String,String)] = recipe flatMap ( t => Space ~> template(t) )
     val templatesParser: Parser[String]          = recipe
-    val learnParser    : Parser[(String,String)] = name flatMap url
+    val learnParser    : Parser[(String,String)] = name flatMap ( t => Space ~> url(t) )
     val deleteParser   : Parser[String]          = recipe
     val upgradeParser  : Parser[String]          = recipe
 
     val liftyParser: Parser[(String,List[String])] = {
       Space ~>
-      token(NotSpace.examples(keywords : _ *) <~ Space) flatMap { cmd => cmd match {
-        case "create"    => createParser map { p => (cmd,listTuple(p)) }
-        case "templates" => templatesParser map { p => (cmd, List(p)) }
-        case "learn"     => learnParser map { p => (cmd, listTuple(p)) }
-        case "delete"    => deleteParser map { p => (cmd, List(p)) }
-        case "upgrade"   => upgradeParser map { p => (cmd, List(p)) }
+      token(NotSpace.examples(keywords : _ *)) flatMap { cmd => cmd match {
+        case "create"    => Space ~> createParser map { p => (cmd,listTuple(p)) }
+        case "templates" => Space ~> templatesParser map { p => (cmd, List(p)) }
+        case "learn"     => Space ~> learnParser map { p => (cmd, listTuple(p)) }
+        case "delete"    => Space ~> deleteParser map { p => (cmd, List(p)) }
+        case "upgrade"   => Space ~> upgradeParser map { p => (cmd, List(p)) }
         case _           => success { (cmd,List[String]()) }
       }}
     }
-
   }
-
 }

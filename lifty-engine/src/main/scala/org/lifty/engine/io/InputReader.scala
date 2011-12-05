@@ -25,13 +25,6 @@ object InputReaderComponent {
   } 
 }
 
-// always returns IO["emulatedInput"]
-object EmulatedInputReaderComponent {
-  def requestInput(msg: String, default: String = ""): IO[String] = io {
-    "emulatedInput"
-  }
-}
-
 /*
  * This has been completely stolen from SBT. Didn't want to add a dependency just
  * to be able to access these classes. 
