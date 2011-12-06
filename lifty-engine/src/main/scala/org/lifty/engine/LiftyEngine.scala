@@ -27,7 +27,7 @@ object LiftyEngine {
     descriptionOfRecipe(recipe).flatMap { description =>
       val template = templateOfRecipe(description, templateName)
       requestArguments(recipe,template,description).flatMap { env =>
-        Scalate.run(env, description, None).success
+        TemplateRenderer.run(env, description)
       }
     }
   }

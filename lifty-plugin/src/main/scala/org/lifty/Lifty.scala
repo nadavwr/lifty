@@ -26,19 +26,21 @@ object Lifty extends Plugin {
       s => { println("\n"+s+"\n") ; state }
     )
   }
-
+  
+  /**
+   *  The parsers. Makes sure that the input is well formed and provides very
+   *  awesome tab-completion. 
+   */
   object LiftyParsers {
 
     def listTuple(t: (String,String)): List[String] = List(t._1,t._2)
 
     // data
-
     val keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
     val recipes: List[String] = Storage.allRecipes.unsafePerformIO map (_.name)
     val templates: Map[String,List[String]] = (recipes map ( r => (r,Storage.templateNames(r).unsafePerformIO.toOption.get))).toMap
 
     // parsers
-
     val recipe: Parser[String] = token(NotSpace.examples(recipes : _ *))
 
     def template(recipe: String): Parser[(String,String)] = {

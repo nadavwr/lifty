@@ -40,24 +40,6 @@ object FileUtil {
   }
   
   /** 
-   * Writes the contents string to a temporary File and returns a handle to that File 
-   * 
-   * @param contents  The contents to write to the file
-   * @return          The newly created temporary File
-   */
-  def writeToTempFile(contents: String): Option[File] = { 
-    try {      
-      val file = File.createTempFile("lifty",".ssp")
-      file.deleteOnExit() // delete when the VM exists. 
-      writeToFile(contents,file, check = false)
-    } catch {
-      case e: Exception => 
-        e.printStackTrace()
-        None
-    }
-  }
-  
-  /** 
    * Writes the contents string to a File and returns a handle to that File 
    * 
    * @param contents  The contents to write to the file
