@@ -60,7 +60,7 @@ object Storage {
     } yield {
       val templates = folder.listFiles.filter( f => f.isFile && f.getName.endsWith(".ssp"))
       Recipe(name, descriptor, templates).success
-    }).getOrElse(Error("No recipe named %s in the storage.".format(name)).fail)
+    }).getOrElse(Error("Sorry, no recipe named %s in the storage.".format(name)).fail)
   }
 
   /** 
@@ -114,13 +114,13 @@ object Storage {
    */
   def deleteRecipe(name: String): IO[Validation[Error, String]] = io {
     recipe(name).unsafePerformIO.fold(
-      (e) => Error("No recipe named %s installed.".format(name)).fail,
+      (e) => Error("Sorry, no recipe named '%s' installed.".format(name)).fail,
       (s) => {
         storage.listFiles
                .filter( f => f.isDirectory && f.getName == name )
                .headOption
                .foreach( recursiveDelete )
-        "Removed %s from the storage".format(name).success
+        "Successfully removed %s from the storage".format(name).success
       })    
   }
   

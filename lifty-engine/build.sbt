@@ -20,8 +20,6 @@ libraryDependencies += "org.scalaz" %% "scalaz-core" % "6.0.3"
 
 libraryDependencies += "jline" % "jline" % "0.9.94"
 
-libraryDependencies += "org.fusesource.scalate" % "scalate-core" % "1.5.3"
-
 pomPostProcess := {
     import xml._
     Rewrite.rewriter {

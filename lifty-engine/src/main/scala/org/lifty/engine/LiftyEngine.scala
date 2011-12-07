@@ -5,7 +5,6 @@ import java.net.{ URL, URI }
 import scalaz._
 import scalaz.effects._
 import Scalaz._
-import org.fusesource.scalate.{ TemplateEngine }
 
 object LiftyEngine {
 
@@ -105,11 +104,10 @@ object LiftyEngine {
   }
 
   def learnMsg(name: String, url: String, recipe: Recipe) = {
-    "Lifty successfully installed recipe with name '%s'. \n".format(name) +
+    "Lifty successfully installed recipe with name: '%s'\n".format(name) +
     "\n"+
-    "Run 'lifty templates %s' for information about the newly installed templates. \n".format(name) +
-    "\n" +
-    "Happy hacking."
+    "Run 'lifty templates %s' for information about\n".format(name) + 
+    "the newly installed templates. Happy hacking." 
   }
 
   /**
@@ -133,12 +131,19 @@ object LiftyEngine {
 
       }.getOrElse("")
       val value = InputReaderComponent
-                    .requestInput("Enter value for %s%s: ".format(argument.name, argument.default.map(_=>"["+default+"]").getOrElse("")),default)
+                    .requestInput("%s%s: ".format(argument.descriptiveName, argument.default.map(_=>" ["+default+"]").getOrElse("")),default)
                     .unsafePerformIO
       (argument.name, value)
     }
 
-    val kvs = description.allArguments(template).foldLeft(Nil: List[(String,String)]) { (xs,c) =>
+    val allArgs = description.allArguments(template)
+    
+    if (!allArgs.isEmpty) {
+      println("\nHi, I just need some more information so I can\n" +
+                 "create the templates just the way you want them\n")
+    }
+
+    val kvs = allArgs.foldLeft(Nil: List[(String,String)]) { (xs,c) =>
       requestInputForMissingArgument(Map(xs: _*), c) :: xs
     }
 

@@ -1,5 +1,7 @@
 package org.lifty.engine
 
+import scala.util.matching.Regex._
+
 import org.lifty.engine.io.{ FileUtil, Storage }
 import org.lifty.engine.io.FileUtil.{ readToString, writeToFile, file}
 import Functional._
@@ -27,77 +29,112 @@ object TemplateRenderer {
     } f.mkdirs()
 
     // render and copy templates (in parallel, yeah!)
-    toRender.foreach { f => renderTemplate(f,env,description) }
-    toCopy.par.foreach { f => copyTemplate(f,env) }
+    val (rendered, copied) = (
+      toRender.par.map { f => renderTemplate(f,env,description) },
+      toCopy.par.map { f => copyTemplate(f,env) }
+    )
     
-    // for any injections that wasn't possible, tell to user how to continue
-    invalidInjections(env.template, description).foreach { templateInjection => 
-      for {
-        txtFile     <- Storage.template(env.recipe, templateInjection.file).unsafePerformIO
-        contents    <- FileUtil.readToString(txtFile).unsafePerformIO
-        renderedStr <- Some(renderString(contents, None, env, description))
-      } {
-        println("\nWasn't able to inject\n\n%s\n\ninto %s at %s ".format(
-          renderedStr,
-          templateInjection.into,
-          templateInjection.point
-        ))
+    val failedRendered = rendered.filter( _.isFailure )
+    val failedCopied   = copied.filter( _.isFailure )
+    
+    if (!failedRendered.isEmpty || !failedCopied.isEmpty) {
+      
+      Error((failedRendered.map( _.fold(e => e.message , s => s) ) ++
+             failedCopied.map( _.fold(e => e.message , s => s ))).mkString("\n")).fail
+      
+      
+    } else { // no failures, we can continue. 
+      
+      val invalid = invalidInjections(env.template, description)
+      
+      if (!invalid.isEmpty) {
+        
+        val injectionMsg: List[String] = (for {
+          injection <- invalid
+        } yield for {
+          txtFile     <- Storage.template(env.recipe, injection.file).unsafePerformIO
+          contents    <- FileUtil.readToString(txtFile).unsafePerformIO
+          renderedStr <- renderString(contents, None, env, description).toOption
+        } yield {
+          "\nWasn't able to inject the following into %s at %s\n\n%s\n\n".format(
+            injection.into,
+            injection.point,
+            renderedStr
+          )
+        }).flatten
+        
+        (injectionMsg.mkString("\n") +
+        "I successfully finished, however, some of the templates I\n"   + 
+        "rendered wanted to inject code into existing files and I'm\n"  +
+        "not allowed to do that so you have to do it manually, sorry.\n" + 
+        "Read above to see what I wanted to inject into each file.").success
+        
+      } else {
+        ("I successfully finished." + env.template.notice.map(s => " I was asked to tell you to: \n\n" + s).getOrElse("")).success
       }
     }
-    
-    /* TODO: MUCH BETTER ERROR HANDLING */
-    "Done.".success
   }
 
-  private def renderString(str: String, templateOpt: Option[TemplateFile], env: Environment, description: Description): String = {
-    
-    def processLine(line: String): String = {
-      
-      println("processLine")
-      
+  private def renderString(str: String, templateOpt: Option[TemplateFile], env: Environment, description: Description): Validation[Error,String] = {
+
+    def processLine(line: String): Validation[Error,String] = {
+
       val variable  = """\$\{(\w*)\}""".r                   //example: ${argumentName}
       val injection = """\/{2}\#inject\spoint\:\s(\w*)""".r //example: //#inject point: dependencies
 
       val variablesReplaced = variable.replaceAllIn(line, m => env.values(m.group(m.groupCount)))
       
-      (for { template <- templateOpt } yield {
+      (for { 
+        template <- templateOpt 
+      } yield {
         
-        val injectionsReplaced = injection.replaceAllIn(variablesReplaced, m => {
-          
+        def grp(m: Match) = {
           val point = m.group(m.groupCount)
           injectionsForPointInFile(point, template, description, env.template).map { injection => 
             Storage.template(env.recipe, injection.file).unsafePerformIO.flatMap { injectionFile =>
               (for { 
                 read <- readToString(injectionFile).unsafePerformIO
-              } yield processLine(read))
+                processed <- processLine(read).toOption
+              } yield processed )
             }.getOrElse {
-              println("Tried to load " + injection.file + " but failed") // Propagate to Validation
-              ""
+              throw new Exception("Tried to load " + injection.file + " but failed")
             }
           }.mkString("\n")
-        })
-      
-        injectionsReplaced
-      }) getOrElse(variablesReplaced)
+        }
+        
+        try { 
+          injection.replaceAllIn(variablesReplaced, grp(_)).success
+        } catch {
+          case e: Exception => Error(e.getMessage).fail
+        }
+
+      }).getOrElse(variablesReplaced.success)
     }
     
-    str.split("\n").map(processLine).mkString("\n")
+    val processed = str.split("\n").map(processLine)
+    val processedFailed = processed.filter(_.isFailure)
+    
+    if (processedFailed.isEmpty) {
+      processed.flatMap(_.toOption).mkString("\n").success
+    } else {
+      Error(processedFailed.map( _.fold(e => e.message , s => s)).mkString("\n")).fail
+    }
   }
 
-  private def renderTemplate(template: TemplateFile, env: Environment, description: Description): String = {
+  private def renderTemplate(template: TemplateFile, env: Environment, description: Description): Validation[Error,String] = {
 
     val destination = replaceVariables(template.destination, env) |> properPath |> file
     
     Storage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile =>
       for {
         str      <- readToString(templateFile).unsafePerformIO
-        rendered = renderString(str, Some(template), env, description)
+        rendered <- renderString(str, Some(template), env, description).toOption
         result   <- writeToFile(rendered, destination)
-      } yield "Rendered file to " + destination
-    } getOrElse "Wasn't able to render a file to " + destination
+      } yield ("Rendered file to " + destination).success
+    } getOrElse Error("Wasn't able to render a file to " + destination).fail
   }
 
-  private def copyTemplate(template: TemplateFile, env: Environment): String = {
+  private def copyTemplate(template: TemplateFile, env: Environment): Validation[Error,String] = {
     
     val destination = replaceVariables(template.destination, env) |> properPath |> file
     
@@ -105,8 +142,8 @@ object TemplateRenderer {
       for {
         templateStr <- readToString(templateFile).unsafePerformIO
         result      <- writeToFile(templateStr, destination)
-      } yield "Copied file " + template.file
-    } getOrElse "Wasn't able to copy a file to " + destination
+      } yield ("Copied file " + template.file).success
+    } getOrElse Error("Wasn't able to copy a file to " + destination).fail
   }
 
   //

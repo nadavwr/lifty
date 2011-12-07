@@ -102,48 +102,68 @@
             "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/index_content_injections.ssp"
         }
     ],
+    "arguments" : [
+      { "name"            : "mainpack",
+        "descriptiveName" : "Main package (example: com.foo.bar)" },
+      { "name"            : "snippetpack",
+        "descriptiveName" : "Package for snippet classes",
+        "default"         : "${mainpack}.snippet" },
+      { "name"            : "modelpack",
+        "descriptiveName" : "Package for model classes",
+        "default"         : "${mainpack}.model" },
+      { "name"            : "cometpack",
+        "descriptiveName" : "Package for comet classes",
+        "default"         : "${mainpack}.comet" },
+      { "name"            : "libpack",
+        "descriptiveName" : "Package for library classes",
+        "default"         : "${mainpack}.lib" },
+        
+      { "name"            : "snippetName",
+        "descriptiveName" : "Name of snippet class (example: Sidebar)" },
+      { "name"            : "modelName",
+        "descriptiveName" : "Name of mapper class (example: Customer)" },
+      { "name"            : "cometName",
+        "descriptiveName" : "Name of comet class (example: Counter)" },
+      { "name"            : "layoutName",
+        "descriptiveName" : "Name of layout (example: Sidebar)" },
+      { "name"            : "projectName",
+        "descriptiveName" : "Name of project (example: skyent)" },
+        
+      
+      { "name"            : "liftversion",
+        "descriptiveName" : "Version of Lift", 
+        "default"         : "2.4-M5" },
+      { "name"            : "scalaVersion",
+        "descriptiveName" : "Version of Scala", 
+        "default"         : "2.9.1" }
+    ],
     "templates" : [
+    
         {   "name"          : "snippet",
             "description"   : "creates a snippet",
-            "arguments"     : [
-                {   "name"          :   "mainpack"},
-                {   "name"          :   "snippetName" },
-                {   "name"          :   "snippetpack",
-                    "default"       :   "${mainpack}.snippet"}
-            ],
+            "arguments"     : ["mainpack","snippetName","snippetpack"],
             "files"         : [
                 {   "file"          : "snippet.ssp",
                     "destination"   : "src/main/scala/${snippetpack}/${snippetName}.scala"
                 }
             ]
         },
+        
         {   "name"          : "mapper",
             "description"   : "Creates a model class using Mapper",
             "notice"        : "Remember to add ${modelName} to the Schemifier in your boot.scala file",
-            "arguments"     : [
-                {   "name"          :   "mainpack"},
-                {   "name"          :   "modelName" },
-                {   "name"          :   "modelpack",
-                    "default"       :   "${mainpack}.model"    
-                }
-            ],
+            "arguments"     : ["mainpack","modelName","modelpack"],
             "files"         : [
                 {   "file"          : "mapper.ssp",
                     "destination"   : "src/main/scala/${modelpack}/${modelName}.scala"
                 }
             ]
         },
+        
         {   "name"          : "comet",
             "description"   : "Creates a comet component",
             "notice"        : "Add <lift:comet type='${cometName}' /> in a template file to use the comet component",
-            "arguments"     : [
-                {   "name"          :   "mainpack"},
-                {   "name"          :   "cometName" },
-                {   "name"          :   "cometpack",
-                    "default"       :   "${mainpack}.comet"
-                    
-                }
-            ],
+            "arguments"     : ["mainpack","cometName", "cometpack"],
             "files"         : [
                 {   "file"          : "comet.ssp",
                     "destination"   : "src/main/scala/${cometpack}/${cometName}.scala"
@@ -151,28 +171,19 @@
             ]
         },
         
-        
         {   "name"          : "layout",
             "description"   : "Creates an empty layout with a surround tag",
-            "arguments"     : [
-                {   "name"          :   "layoutName" }
-            ],
+            "arguments"     : ["layoutName"],
             "files"         : [
                 {   "file"          : "layout.ssp",
                     "destination"   : "src/main/webapp/${layoutName}.html"
                 }
             ]
         },
+        
         {   "name"          : "user",
             "description"   : "Template for a model class implemented using Mapper. It provides basic functionality that would expect from a User",
-            "arguments"     : [
-                {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M5"  },
-                {   "name"          :   "mainpack"},
-                {   "name"          :   "modelpack",
-                    "default"       :   "${mainpack}.model"    
-                }
-            ],
+            "arguments"     : ["liftversion","mainpack","modelpack"],
             "files"         : [
                 {   "file"          : "user.ssp",
                     "destination"   : "src/main/scala/${modelpack}/User.scala"
@@ -201,13 +212,10 @@
                 }
             ]
         },
+        
         {   "name"          : "dependencyFactory",
             "description"   : "I really don't know what this is used for, Tim? David?",
-            "arguments"     : [
-                {   "name"          :   "mainpack"},
-                {   "name"          :   "libpack",
-                    "default"       :   "${mainpack}.lib" }
-            ],
+            "arguments"     : ["mainpack","libpack"],
             "files"         : [
                 {   "file"          : "dependencyFactory.ssp",
                     "destination"   : "src/main/scala/${libpack}/DependencyFactory.scala"
@@ -215,6 +223,7 @@
             ]
         },
         {   "name"          : "project-blank",
+            "notice"        : "Run the 'reload' command now to reload your project configuration.\nYou can then start and stop your webapp using container:start/stop",
             "description"   : "Creates a blank Lift project that uses SBT as it's build system",
             "folders"       : [
               "src/main/resources/props",
@@ -229,14 +238,7 @@
               "src/main/webapp/static",
               "src/main/webapp/WEB-INF"
             ],
-            "arguments"     : [
-                {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M5" },
-                {   "name"          :   "mainpack"},
-                {   "name"          :   "projectName" },
-                {   "name"          :   "scalaVersion",
-                    "default"       :   "2.9.1" }
-            ],
+            "arguments"     : ["liftversion","mainpack","projectName","scalaVersion"],
             "files"         : [
                 {   "file"          : "main_build.ssp",
                     "destination"   : "build.sbt"},
@@ -264,14 +266,12 @@
                     "destination"   : "src/main/webapp/WEB-INF/web.xml"}
             ]
         },
+        
         {   "name"          : "project",
+            "notice"        : "Run the 'reload' command now to reload your project configuration.\nYou can then start and stop your webapp using container:start/stop",
             "description"   : "Creates a Lift project with some functionality to get you started",
             "dependencies"  : ["project-blank", "user", "dependencyFactory"],
-            "arguments"     : [
-                {   "name"          :   "liftversion",
-                    "default"       :   "2.4-M5" },
-                {   "name"          :   "mainpack" }
-            ],
+            "arguments"     : ["liftversion","mainpack"],
             "files"         : [
                 {   "file"          : "index-static.html",
                     "destination"   : "src/main/webapp/static/index.html"},

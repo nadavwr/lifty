@@ -36,12 +36,12 @@ object Lifty extends Plugin {
     def listTuple(t: (String,String)): List[String] = List(t._1,t._2)
 
     // data
-    val keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
-    val recipes: List[String] = Storage.allRecipes.unsafePerformIO map (_.name)
-    val templates: Map[String,List[String]] = (recipes map ( r => (r,Storage.templateNames(r).unsafePerformIO.toOption.get))).toMap
+    def keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
+    def recipes: List[String] = Storage.allRecipes.unsafePerformIO map (_.name)
+    def templates: Map[String,List[String]] = (recipes map ( r => (r,Storage.templateNames(r).unsafePerformIO.toOption.get))).toMap
 
     // parsers
-    val recipe: Parser[String] = token(NotSpace.examples(recipes : _ *))
+    lazy val recipe: Parser[String] = token(NotSpace.examples(recipes : _ *))
 
     def template(recipe: String): Parser[(String,String)] = {
       if (templates.contains(recipe)) {
@@ -51,17 +51,17 @@ object Lifty extends Plugin {
       }
     }
 
-    val name: Parser[String] = NotSpace
+    lazy val name: Parser[String] = NotSpace
 
-    val url: String => Parser[(String,String)] = (n) => NotSpace map ( u => (n,u) )
+    lazy val url: String => Parser[(String,String)] = (n) => NotSpace map ( u => (n,u) )
 
-    val createParser   : Parser[(String,String)] = recipe flatMap ( t => Space ~> template(t) )
-    val templatesParser: Parser[String]          = recipe
-    val learnParser    : Parser[(String,String)] = name flatMap ( t => Space ~> url(t) )
-    val deleteParser   : Parser[String]          = recipe
-    val upgradeParser  : Parser[String]          = recipe
+    lazy val createParser   : Parser[(String,String)] = recipe flatMap ( t => Space ~> template(t) )
+    lazy val templatesParser: Parser[String]          = recipe
+    lazy val learnParser    : Parser[(String,String)] = name flatMap ( t => Space ~> url(t) )
+    lazy val deleteParser   : Parser[String]          = recipe
+    lazy val upgradeParser  : Parser[String]          = recipe
 
-    val liftyParser: Parser[(String,List[String])] = {
+    lazy val liftyParser: Parser[(String,List[String])] = {
       Space ~>
       token(NotSpace.examples(keywords : _ *)) flatMap { cmd => cmd match {
         case "create"    => Space ~> createParser map { p => (cmd,listTuple(p)) }

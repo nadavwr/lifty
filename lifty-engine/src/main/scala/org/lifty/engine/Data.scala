@@ -1,17 +1,5 @@
 package org.lifty.engine
 
-/*
-  The following are the data classes that are used internally
-*/
-
-trait Command { val keyword: String }
-object HelpCommand extends Command { val keyword = "help"}                       
-object CreateCommand extends Command { val keyword = "create"}                   
-object TemplatesCommand extends Command { val keyword = "templates"}             
-object UpdateTemplatesCommand extends Command { val keyword = "update"}
-object LearnCommand extends Command { val keyword = "learn" }
-object RecipesCommand extends Command { val keyword = "recipes" }
-object DeleteCommand extends Command { val keyword = "delete" } 
 
 case class Error(message: String)
 
@@ -26,17 +14,21 @@ case class Description(
   origin: String,
   version: Int, 
   templates: List[Template],
+  arguments: List[Argument],
   sources: List[Source]) {
-  
   
   def templateNamed(name: String): Option[Template] = {
     templates.find( _.name == name)
   }
   
+  def argumentNamed(name: String): Option[Argument] = {
+    arguments.find( _.name == name)
+  }
+  
   def allArguments(template: Template): List[Argument] = {
     val directArguments = template.arguments
     val transitive      = dependenciesOfTemplate(template).flatMap( _.arguments)
-    (directArguments ::: transitive).distinct
+    (directArguments ::: transitive).distinct.flatMap( (arg: String) => arguments.find( _.name == arg ) )
   }
   
   def allFolders(template: Template): List[String] = {
@@ -63,7 +55,7 @@ case class Template(
   description:    String,
   notice:         Option[String],
   folders:        Option[List[String]],
-  arguments:      List[Argument],
+  arguments:      List[String],
   files:          List[TemplateFile],
   injections:     List[TemplateInjection],
   dependencies:   List[String])
@@ -79,9 +71,9 @@ case class TemplateFile(
 )
 
 case class Argument(
-  name:         String,
-  default:      Option[String],
-  repeatable:   Option[Boolean])
+  name:            String,
+  descriptiveName: String, 
+  default:         Option[String])
 
 case class TemplateInjection(
   file:         String,
