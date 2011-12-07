@@ -1,5 +1,3 @@
-<%@ var libpack:String %>
-
 package ${libpack}
 
 import net.liftweb.http._

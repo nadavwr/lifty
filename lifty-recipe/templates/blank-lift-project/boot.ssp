@@ -1,5 +1,3 @@
-<%@ var mainpack:String %>
-
 package bootstrap.liftweb
 
 import net.liftweb._

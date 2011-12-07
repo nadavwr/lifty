@@ -1,6 +1,3 @@
-<%@ var modelName:String %>
-<%@ var modelpack:String %>
-
 package ${modelpack}
 
 import net.liftweb.mapper._

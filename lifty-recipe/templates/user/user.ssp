@@ -1,5 +1,3 @@
-<%@ var modelpack:String %>
-
 package ${modelpack} {
 
 import net.liftweb._

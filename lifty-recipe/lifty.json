@@ -217,7 +217,6 @@
         {   "name"          : "project-blank",
             "description"   : "Creates a blank Lift project that uses SBT as it's build system",
             "folders"       : [
-              "project/plugins",
               "src/main/resources/props",
               "src/main/scala/bootstrap/liftweb",
               "src/main/scala/${mainpack}/comet",
@@ -242,7 +241,7 @@
                 {   "file"          : "main_build.ssp",
                     "destination"   : "build.sbt"},
                 {   "file"          : "plugin_build.ssp",
-                    "destination"   : "project/plugins/build.sbt"},
+                    "destination"   : "project/plugins.sbt"},
                 {   "file"          : "LiftConsole.scala",
                     "destination"   : "src/test/scala/LiftConsole.scala"},
                 {   "file"          : "RunWebApp.scala",

@@ -1,5 +1,3 @@
-<%@ var mainpack:String %>
-
 package ${mainpack} {
 
 import java.io.File

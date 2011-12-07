@@ -1,31 +1,32 @@
-Lifty 1.7
-=========
+Lifty
+=====
+
+Lifty is a plugin that adds scaffolding to SBT 0.11.x (Simple Build Tool). It's easy to teach Lifty about new scaffolding templates, you just have to give it the url to recipe and it will download the templates and you're set. 
 
 Getting started
 ---------------
 
-Simply follow these steps
+You need to have SBT installed (any version of SBT in th 0.11.x series should do)
 
-- Install SBT 0.11.1 (or any in the 0.11.x series)  
-- Create a global plugin .sbt file: ~/.sbt/plugins/build.sbt
-- Add the following to that file: addSbtPlugin("org.lifty" % "lifty" % "1.7.2")
+Now, add lifty as a global plugin by adding the following line to your `~/.sbt/plugins/build.sbt` file: 
 
-Now you have lifty installed. So to create a new Lift project simple do this: 
+    addSbtPlugin("org.lifty" % "lifty" % "1.7.4")
 
-- Create a new SBT project
-- In the SBT console 
-    - > lifty learn lift https://raw.github.com/Lifty/lifty/master/lifty-recipe/lifty.json
-    - > lifty create lift project
-    - > reload
-    - > container:start
-    - > container:stop
+Whenever you're in a SBT session you now have the `lifty` command avaiable. The `lifty` command has tab-completion
+enabled to make it faster/easier to use. Try typing `lifty` and hit tab in an SBT session.
 
-About 1.7
------------
+Now that you have Lifty installed you need to teach it how to generate different files for you. You
+do so by pointing lifty to a recipe. Here's a [list](http://lifty.github.com/ List) of all currently known recipes.
 
-The nice thing about Lifty 1.7 is that templates are now stored online together with a 
-description file (in json). This means that templates, arguments (and their default values) 
-can be updated easily. This should make it a lot easier for the community to help maintain lifty :)
+Here's what you would have to type to teach Lifty about Lift projects and templates 
 
-It's also a whole lot easier to extend lifty. You simply create some new templates and a json descriptor 
-and you're up and running :)
+    > lifty learn lift https://raw.github.com/Lifty/lifty/master/lifty-recipe/lifty.json
+
+To create a fresh Lift webapp and start it simply type:
+
+    > lifty create lift project
+    > reload          
+    > container:start
+    > container:stop
+    
+Now point your browser to http://localhost:8080

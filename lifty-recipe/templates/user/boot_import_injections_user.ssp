@@ -1,4 +1,3 @@
-<%@ var modelpack:String %>
 import net.liftweb._
 import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}

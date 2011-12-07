@@ -1,6 +1,3 @@
-<%@ var cometName:String %>
-<%@ var cometpack:String %>
-
 package ${cometpack}
 
 import net.liftweb._
