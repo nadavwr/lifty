@@ -1,4 +1,4 @@
-version := "0.7.4-SNAPSHOT"
+version := "0.7.4"
 
 name := "lifty-engine"
 

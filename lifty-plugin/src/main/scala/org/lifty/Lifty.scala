@@ -3,6 +3,7 @@ package org.lifty
 import org.lifty.engine._
 import org.lifty.engine.io.{ Storage }
 
+import scalaz.{ Validation }
 import scalaz.effects.IO
 
 import sbt._
@@ -38,16 +39,20 @@ object Lifty extends Plugin {
     // data
     def keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
     def recipes: List[String] = Storage.allRecipes.unsafePerformIO map (_.name)
-    def templates: Map[String,List[String]] = (recipes map ( r => (r,Storage.templateNames(r).unsafePerformIO.toOption.get))).toMap
+    def templates: Map[String,Validation[Error,List[String]]] = 
+      (recipes map ( r => (r,Storage.templateNames(r).unsafePerformIO))).toMap
 
     // parsers
     lazy val recipe: Parser[String] = token(NotSpace.examples(recipes : _ *))
 
     def template(recipe: String): Parser[(String,String)] = {
       if (templates.contains(recipe)) {
-        token(NotSpace.examples(templates(recipe) : _ *).map( t => (recipe,t) ))
+        templates(recipe).fold(
+          (e) => failure(e.message + "\nplease reinstall the recipe"),
+          (s) => token(NotSpace.examples(s : _ *).map( t => (recipe,t) ))
+        )
       } else {
-        failure(recipe + "Lifty doesn't know any recipe named " + recipe)
+        failure("Lifty doesn't know any recipe named " + recipe)
       }
     }
 
