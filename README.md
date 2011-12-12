@@ -1,7 +1,8 @@
 Lifty
 =====
 
-Lifty is a plugin that adds scaffolding to SBT 0.11.x (Simple Build Tool). It's easy to teach Lifty about new scaffolding templates, you just have to give it the url to recipe and it will download the templates and you're set. 
+Lifty is a plugin that adds scaffolding to SBT 0.11.x. See [http://lifty.github.com/](http://lifty.github.com/ "lifty") for 
+more information
 
 Getting started
 ---------------
@@ -16,7 +17,7 @@ Whenever you're in a SBT session you now have the `lifty` command avaiable. The 
 enabled to make it faster/easier to use. Try typing `lifty` and hit tab in an SBT session.
 
 Now that you have Lifty installed you need to teach it how to generate different files for you. You
-do so by pointing lifty to a recipe. Here's a [list](http://lifty.github.com/ List) of all currently known recipes.
+do so by pointing lifty to a recipe. This site contains a [list](http://lifty.github.com/ "List") of all currently known recipes.
 
 Here's what you would have to type to teach Lifty about Lift projects and templates 
 
