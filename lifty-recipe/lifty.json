@@ -1,6 +1,6 @@
 {
     "origin"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/lifty.json",
-    "version" : 1.2,
+    "version" : 1.3,
     "sources" : [
         {   "name" : "snippet.ssp",
             "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/snippet.ssp"
@@ -48,12 +48,6 @@
         },
         {   "name" : "AppTest.ssp",
             "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/AppTest.ssp"
-        },
-        {   "name" : "LiftConsole.scala",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/LiftConsole.scala"
-        },
-        {   "name" : "RunWebApp.scala",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/RunWebApp.scala"
         },
         {   "name" : "ajax-loader.gif",
             "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/ajax-loader.gif"
@@ -244,10 +238,6 @@
                     "destination"   : "build.sbt"},
                 {   "file"          : "plugin_build.ssp",
                     "destination"   : "project/plugins.sbt"},
-                {   "file"          : "LiftConsole.scala",
-                    "destination"   : "src/test/scala/LiftConsole.scala"},
-                {   "file"          : "RunWebApp.scala",
-                    "destination"   : "src/test/scala/RunWebApp.scala"},
                 {   "file"          : "default.props",
                     "destination"   : "src/main/resources/props/default.props"},
                 {   "file"          : "default.html",
