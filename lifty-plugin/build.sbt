@@ -8,7 +8,9 @@ organization := "org.lifty"
 
 scalaVersion := "2.9.1"
 
-publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/")
+publishTo := Some(Resolver.url("sbt-plugin-releases", new URL("http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases/"))(Resolver.ivyStylePatterns))
+
+publishMavenStyle := false
 
 credentials += Credentials(Path.userHome / "dev" / ".nexus_credentials")
 
