@@ -1,11 +1,7 @@
-package org.lifty
-
 import org.lifty.engine._
 import org.lifty.engine.io.{ Storage }
-
 import scalaz.{ Validation }
 import scalaz.effects.IO
-
 import sbt._
 import Keys._
 import Defaults._
@@ -15,18 +11,35 @@ import complete.{ Parser }
 object Lifty extends Plugin {
 
   import LiftyParsers._
-
-  override lazy val settings = Seq(commands += liftyCommand)
-
-  val liftyCommand = Command("lifty")(_ => liftyParser)(liftyDef _)
-
-  def liftyDef(state: State, p: (String, List[String])) = { 
-    val (cmd: String, args: List[String]) = p
-    LiftyEngine.runCommand(cmd, args).fold(
-      e => { println("\n" + e.message + "\n") ; state.fail },
-      s => { println("\n"+s+"\n") ; state }
-    )
-  }
+  
+  val liftyTask = InputKey[Unit]("lifty") 
+  val liftyFolderSetting = SettingKey[String]("target-folder-lifty") /* Configure lifty to use another folder
+                                                                        than '.' for the root of the generated
+                                                                        files. (useful for tests, so I can clean up)*/
+  val liftySettings = Seq(
+    liftyFolderSetting := ".",
+    liftyTask <<= InputTask(_ => liftyParser)(liftyDef)
+  )
+  
+  type parsedResult = (String, List[String])
+  
+  lazy val liftyDef = 
+    (parsedTask: TaskKey[parsedResult]) => {
+      (parsedTask, liftyFolderSetting) map { (parsed, folder) => 
+        (parsed match {
+          case ("create", x :: y :: Nil) => LiftyEngine.create(x,y, LiftyConfiguration(folder)) 
+          case ("templates", x :: Nil)   => LiftyEngine.templates(x)
+          case ("learn", x :: y :: Nil)  => LiftyEngine.learn(x,y)
+          case ("delete", x :: Nil)      => LiftyEngine.delete(x)
+          case ("upgrade", x :: Nil)     => LiftyEngine.upgrade(x)
+          case ("recipes", Nil)          => LiftyEngine.recipes()
+          case ("help", Nil)             => LiftyEngine.help()
+        }).fold(
+          e => { println("\n" + e.message + "\n") },
+          s => { println("\n"+s+"\n") }
+        )
+      }
+    }    
   
   /**
    *  The parsers. Makes sure that the input is well formed and provides very
@@ -74,7 +87,7 @@ object Lifty extends Plugin {
         case "learn"     => Space ~> learnParser map { p => (cmd, listTuple(p)) }
         case "delete"    => Space ~> deleteParser map { p => (cmd, List(p)) }
         case "upgrade"   => Space ~> upgradeParser map { p => (cmd, List(p)) }
-        case _           => success { (cmd,List[String]()) }
+        case _   => success { (cmd, Nil) }
       }}
     }
   }

@@ -8,25 +8,11 @@ import Scalaz._
 
 object LiftyEngine {
 
-  def runCommand(cmd: String, args: List[String]): Validation[Error, String] = {
-    // Because of the way the parsers are defined, we know exactly how many elements
-    // are in the list in each case.
-    cmd match {
-      case "create"    => create(args(0), args(1))
-      case "templates" => templates(args(0))
-      case "learn"     => learn(args(0),args(1))
-      case "delete"    => delete(args(0))
-      case "upgrade"   => upgrade(args(0))
-      case "recipes"   => recipes()
-      case "help"      => help()
-    }
-  }
-
-  def create(recipe: String, templateName: String): Validation[Error,String] = {
+  def create(recipe: String, templateName: String, config: LiftyConfiguration): Validation[Error,String] = {
     descriptionOfRecipe(recipe).flatMap { description =>
       val template = templateOfRecipe(description, templateName)
       requestArguments(recipe,template,description).flatMap { env =>
-        TemplateRenderer.run(env, description)
+        TemplateRenderer.run(env, description, config)
       }
     }
   }

@@ -2,8 +2,14 @@ package org.lifty.engine
 
 
 case class Error(message: String)
-
 case class Environment(recipe: String, template: Template, values: Map[String,String])
+
+
+case class LiftyConfiguration(
+  val folderName: String /* This is used if the user wants the files to be generated into 
+                            some subfolder. I use it when in project where I test Lifty to
+                            make it easier to clean up after trail runs. */
+)
 
 /*
   The following are the case classes needed to describe a Lifty-engine application

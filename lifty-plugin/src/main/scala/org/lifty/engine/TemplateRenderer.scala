@@ -15,7 +15,10 @@ object TemplateRenderer {
 
   /* TODO: MUCH BETTER ERROR HANDLING */
 
-  def run(env: Environment, description: Description): Validation[Error,String] = {
+  def run(
+    env: Environment, 
+    description: Description, 
+    config: LiftyConfiguration): Validation[Error,String] = {
 
     val isRenderable = (file: TemplateFile) => file.file.endsWith(".ssp") // TODO: CHANGE TO SOMETHING ELSE AT SOME POINT
     val files        = env.template.files ::: description.dependenciesOfTemplate(env.template).flatMap(_.files)
@@ -25,13 +28,13 @@ object TemplateRenderer {
     // create folder structure
     for {
       path <- description.allFolders(env.template)
-      f = replaceVariables(path, env) |> properPath |> file
+      f = config.folderName + "/" + replaceVariables(path, env) |> properPath |> file
     } f.mkdirs()
 
     // render and copy templates (in parallel, yeah!)
     val (rendered, copied) = (
-      toRender.par.map { f => renderTemplate(f,env,description) },
-      toCopy.par.map { f => copyTemplate(f,env) }
+      toRender.par.map { f => renderTemplate(f,env,description, config) },
+      toCopy.par.map { f => copyTemplate(f,env, config) }
     )
     
     val failedRendered = rendered.filter( _.isFailure )
@@ -70,12 +73,17 @@ object TemplateRenderer {
         "Read above to see what I wanted to inject into each file.").success
         
       } else {
-        ("I successfully finished." + env.template.notice.map(s => " I was asked to tell you to: \n\n" + s).getOrElse("")).success
+        ("I successfully finished." + 
+          env.template.notice.map(s => " I was asked to tell you to: \n\n" + s).getOrElse("")).success
       }
     }
   }
 
-  private def renderString(str: String, templateOpt: Option[TemplateFile], env: Environment, description: Description): Validation[Error,String] = {
+  private def renderString(
+    str: String, 
+    templateOpt: Option[TemplateFile], 
+    env: Environment, 
+    description: Description): Validation[Error,String] = {
 
     def processLine(line: String): Validation[Error,String] = {
 
@@ -121,9 +129,13 @@ object TemplateRenderer {
     }
   }
 
-  private def renderTemplate(template: TemplateFile, env: Environment, description: Description): Validation[Error,String] = {
+  private def renderTemplate(
+    template: TemplateFile, 
+    env: Environment, 
+    description: Description, 
+    config: LiftyConfiguration): Validation[Error,String] = {
 
-    val destination = replaceVariables(template.destination, env) |> properPath |> file
+    val destination = config.folderName + "/" + replaceVariables(template.destination, env) |> properPath |> file
     
     Storage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile =>
       for {
@@ -134,9 +146,12 @@ object TemplateRenderer {
     } getOrElse Error("Wasn't able to render a file to " + destination).fail
   }
 
-  private def copyTemplate(template: TemplateFile, env: Environment): Validation[Error,String] = {
+  private def copyTemplate(
+    template: TemplateFile, 
+    env: Environment,
+    config: LiftyConfiguration): Validation[Error,String] = {
     
-    val destination = replaceVariables(template.destination, env) |> properPath |> file
+    val destination = config.folderName + "/" + replaceVariables(template.destination, env) |> properPath |> file
     
     Storage.template(env.recipe, template.file).unsafePerformIO.flatMap { templateFile =>
       for {
@@ -150,7 +165,12 @@ object TemplateRenderer {
   // Util
   //
 
-  private def injectionsForPointInFile(point: String, templateFile: TemplateFile, description: Description, rendering: Template): List[TemplateInjection] = { 
+  private def injectionsForPointInFile(
+    point: String, 
+    templateFile: TemplateFile, 
+    description: Description, 
+    rendering: Template): List[TemplateInjection] = { 
+      
     val dependencies = description.dependenciesOfTemplate(rendering)
     val injections   = dependencies.flatMap { _.injections } ::: rendering.injections 
     injections.filter( _.into == templateFile.file )
