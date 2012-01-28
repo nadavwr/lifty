@@ -20,32 +20,24 @@ object DescriptionLoader {
   def load(description: URL): IO[Validation[Error, Description]] = io {
     val file = File.createTempFile("descriptor",".json")
     file.deleteOnExit() 
-    Downloader.download(description, file).unsafePerformIO.fold(
-      (e) => e.fail,
-      (s) => load(file).unsafePerformIO.fold(
-        (e) => e.fail,
-        (s) => s.success
-      )
-    )
+    Downloader.download(description, file).unsafePerformIO.flatMap { _ =>
+      load(file).unsafePerformIO
+    }
   }
 
   // Load a json description of a recipe 
-  def load(description: File): IO[Validation[Error, Description]] = io {
-    attemptToGetStream(description).fold(
-      err         => err.fail,
-      inputStream => (for {
-        jvalue      <- JsonParser.parseOpt(inputStream)
-        description <- jvalue.extractOpt[Description]
-      } yield description.success).getOrElse(Error("Wasn't able to parse json file: " + description).fail)
-    )
-  }
-
-  // This will attempt to create an InputStreamReader from the url passed.
-  private def attemptToGetStream(file: File): Validation[Error, InputStreamReader] = {
-    try {
-      new InputStreamReader(new FileInputStream(file)).success
-    } catch {
-      case e: Exception => Error("Wasn't able to read the file: %s ".format(e.getMessage)).fail
+  def load(description: File): IO[Validation[Error, Description]] = 
+    FileUtil.readToString(description).map { strOpt => 
+      strOpt.map { str: String => 
+        try {
+          val jvalue = JsonParser.parse(str)
+          jvalue.extractOpt[Description]
+                .map(_.success)
+                .getOrElse(Error("Wasn't able to extract JSON to AST").fail)
+        } catch {
+          case e: Exception => 
+            Error("Wasn't able to pase file %s, got stacktrace".format(description,e.getStackTrace)).fail
+        }
+      }.getOrElse(Error("Wasn't able to read file %s".format(description)).fail)
     }
-  }
 }
