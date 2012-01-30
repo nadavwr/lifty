@@ -31,7 +31,7 @@ object Lifty extends Plugin {
           case ("templates", x :: Nil)   => LiftyEngine.templates(x)
           case ("learn", x :: y :: Nil)  => LiftyEngine.learn(x,y)
           case ("delete", x :: Nil)      => LiftyEngine.delete(x)
-          case ("upgrade", x :: Nil)     => LiftyEngine.upgrade(x)
+          case ("update", x :: Nil)     => LiftyEngine.upgrade(x)
           case ("recipes", Nil)          => LiftyEngine.recipes()
           case ("help", Nil)             => LiftyEngine.help()
         }).fold(
@@ -50,7 +50,7 @@ object Lifty extends Plugin {
     def listTuple(t: (String,String)): List[String] = List(t._1,t._2)
 
     // data
-    def keywords = List("create", "templates", "learn", "delete", "upgrade", "recipes", "help")
+    def keywords = List("create", "templates", "learn", "delete", "update", "recipes", "help")
     def recipes: List[String] = Storage.allRecipes.unsafePerformIO map (_.name)
     def templates: Map[String,Validation[Error,List[String]]] = 
       (recipes map ( r => (r,Storage.templateNames(r).unsafePerformIO))).toMap
@@ -86,7 +86,7 @@ object Lifty extends Plugin {
         case "templates" => Space ~> templatesParser map { p => (cmd, List(p)) }
         case "learn"     => Space ~> learnParser map { p => (cmd, listTuple(p)) }
         case "delete"    => Space ~> deleteParser map { p => (cmd, List(p)) }
-        case "upgrade"   => Space ~> upgradeParser map { p => (cmd, List(p)) }
+        case "update"   => Space ~> upgradeParser map { p => (cmd, List(p)) }
         case _   => success { (cmd, Nil) }
       }}
     }
