@@ -36,7 +36,8 @@ object DescriptionLoader {
                 .getOrElse(Error("Wasn't able to extract JSON to AST").fail)
         } catch {
           case e: Exception => 
-            Error("Wasn't able to pase file %s, got stacktrace".format(description,e.getStackTrace)).fail
+            e.printStackTrace()
+            Error("Wasn't able to pase file %s because %s".format(description,e)).fail
         }
       }.getOrElse(Error("Wasn't able to read file %s".format(description)).fail)
     }
