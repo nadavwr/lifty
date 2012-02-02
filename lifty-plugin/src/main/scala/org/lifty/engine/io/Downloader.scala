@@ -29,6 +29,8 @@ object Downloader {
         line = in.readLine()
       }
 
+      in.close()
+
       to.getParentFile.mkdirs()
       to.createNewFile()
 

@@ -112,17 +112,23 @@ object Storage {
    * 
    * @param name The name of the recipe
    */
-  def deleteRecipe(name: String): IO[Validation[Error, String]] = io {
-    recipe(name).unsafePerformIO.fold(
-      (e) => Error("Sorry, no recipe named '%s' installed.".format(name)).fail,
-      (s) => {
-        storage.listFiles
-               .filter( f => f.isDirectory && f.getName == name )
-               .headOption
-               .foreach( recursiveDelete )
-        "Successfully removed %s from the storage".format(name).success
-      })    
-  }
+  def deleteRecipe(name: String): IO[Validation[Error, String]] = {
+      recipe(name).map { _.fold(
+        (e) => Error("Sorry, no recipe named '%s' installed.".format(name)).fail,
+        (s) => {
+          val folder = storage.listFiles.filter( f => f.isDirectory && f.getName == name ).head
+          if(recursiveDelete(folder)) {
+            "Successfully removed %s from the storage".format(name).success  
+          } else {
+            Error(
+              "Sorry, wasn't able to remove %s, I'm not sure\n".format(name) + 
+              "why this is, sometimes it helps to restart SBT, so please\n" + 
+              "do that and try again."
+            ).fail
+          }
+        })    
+      }
+    }
   
   /*
    *
@@ -142,7 +148,7 @@ object Storage {
   
   private val / = File.separator
   
-  private def recursiveDelete(file: File): Unit = {
+  private def recursiveDelete(file: File): Boolean = {
     if (file.isDirectory && !file.listFiles.isEmpty) {
       file.listFiles.foreach( recursiveDelete ) 
       file.delete
