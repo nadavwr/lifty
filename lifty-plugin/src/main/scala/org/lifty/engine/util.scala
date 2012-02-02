@@ -20,6 +20,13 @@ object Util {
     }
   }
   
-  def packageAsPath(p: String) = p.replace(".",File.separator )
+  def packageAsPath(p: String) = {
+    File.separator match {
+      case "/"  => p.replace(".", File.separator )
+      case "\\" => p.replace(".", """\\""")
+    }
+  }
+  
+  
   
 }

@@ -56,9 +56,8 @@ object FileUtil {
       } else {
         
         val parentPath = File.separator match {
-		case "\\" => (file.getAbsolutePath.split("\\\\").init.mkString("\\\\")) // for windows
-		case _ => (file.getAbsolutePath.split(File.separator).init.mkString(File.separator)) // for linux and others
-	      		
+		      case "\\" => (file.getAbsolutePath.split("""\\""").init.mkString("""\\""")) // for windows
+      		case _ => (file.getAbsolutePath.split(File.separator).init.mkString(File.separator)) // for linux and others
       	}
         new File(parentPath).mkdirs()
         file.createNewFile()
