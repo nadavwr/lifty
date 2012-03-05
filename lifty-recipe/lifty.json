@@ -126,7 +126,7 @@
       
       { "name"            : "liftversion",
         "descriptiveName" : "Version of Lift", 
-        "default"         : "2.4-M5" },
+        "default"         : "2.4" },
       { "name"            : "scalaVersion",
         "descriptiveName" : "Version of Scala", 
         "default"         : "2.9.1" }
