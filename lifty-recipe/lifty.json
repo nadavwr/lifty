@@ -1,99 +1,99 @@
 {
-    "origin"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/lifty.json",
+    "origin"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/lifty.json",
     "version" : 1.3,
     "sources" : [
         {   "name" : "snippet.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/snippet.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/snippet.ssp"
         },
         {   "name" : "mapper.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/mapper.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/mapper.ssp"
         },
         {   "name" : "layout.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/layout.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/layout.ssp"
         },
         {   "name" : "dependencyFactory.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/dependencyFactory.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/dependencyFactory.ssp"
         },
         {   "name" : "comet.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/comet.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/comet.ssp"
         },
         
         {   "name" : "ProjectDefinition_dependencies_injections_user.txt",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/user/ProjectDefinition_dependencies_injections_user.txt"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/user/ProjectDefinition_dependencies_injections_user.txt"
         },
         {   "name" : "boot_bottom_injections_user.txt",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/user/boot_bottom_injections_user.txt"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/user/boot_bottom_injections_user.txt"
         },
         {   "name" : "boot_import_injections_user.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/user/boot_import_injections_user.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/user/boot_import_injections_user.ssp"
         },
         {   "name" : "boot_sitemap_injections_user.txt",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/user/boot_sitemap_injections_user.txt"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/user/boot_sitemap_injections_user.txt"
         },
         {   "name" : "boot_top_injections_user.txt",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/user/boot_top_injections_user.txt"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/user/boot_top_injections_user.txt"
         },
         {   "name" : "user.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/user/user.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/user/user.ssp"
         },
         
         {   "name" : "main_build.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/main_build.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/main_build.ssp"
         },
         {   "name" : "plugin_build.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/plugin_build.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/plugin_build.ssp"
         },
         {   "name" : "404.html",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/404.html"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/404.html"
         },
         {   "name" : "AppTest.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/AppTest.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/AppTest.ssp"
         },
         {   "name" : "ajax-loader.gif",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/ajax-loader.gif"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/ajax-loader.gif"
         },
         {   "name" : "boot.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/boot.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/boot.ssp"
         },
         {   "name" : "default.html",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/default.html"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/default.html"
         },
         {   "name" : "default.props",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/default.props"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/default.props"
         },
         {   "name" : "index.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/index.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/index.ssp"
         },
         {   "name" : "web.xml",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/web.xml"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/web.xml"
         },
         {   "name" : "wizard-all.html",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/blank-lift-project/wizard-all.html"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/blank-lift-project/wizard-all.html"
         },
         
         {   "name" : "HelloWorldTest.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/HelloWorldTest.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/HelloWorldTest.ssp"
         },
         {   "name" : "ProjectDefinition_dependencies_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/ProjectDefinition_dependencies_injections.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/ProjectDefinition_dependencies_injections.ssp"
         },
         {   "name" : "boot_bottom_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/boot_bottom_injections.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/boot_bottom_injections.ssp"
         },
         {   "name" : "boot_import_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/boot_import_injections.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/boot_import_injections.ssp"
         },
         {   "name" : "boot_sitemap_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/boot_sitemap_injections.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/boot_sitemap_injections.ssp"
         },
         {   "name" : "helloworld.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/helloworld.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/helloworld.ssp"
         },
         {   "name" : "index-static.html",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/index-static.html"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/index-static.html"
         },
         {   "name" : "index_content_injections.ssp",
-            "url"  : "https://raw.github.com/Lifty/lifty/master/lifty-recipe/templates/basic-lift-project/index_content_injections.ssp"
+            "url"  : "https://raw.github.com/nadavwr/lifty/master/lifty-recipe/templates/basic-lift-project/index_content_injections.ssp"
         }
     ],
     "arguments" : [
@@ -121,7 +121,7 @@
       { "name"            : "layoutName",
         "descriptiveName" : "Name of layout (example: Sidebar)" },
       { "name"            : "projectName",
-        "descriptiveName" : "Name of project (example: skyent)" },
+        "descriptiveName" : "Name of project (example: skynet)" },
         
       
       { "name"            : "liftversion",
